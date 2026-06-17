@@ -1,0 +1,6 @@
+{
+  "name": "Certificado CWB",
+  "description": "Emissão de certificados digitais e-CPF e e-CNPJ rápidos em Curitiba com validação por videoconferência para todo o Brasil.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
