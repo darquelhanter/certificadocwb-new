@@ -28,7 +28,7 @@ import {
   BookOpen,
   Printer
 } from 'lucide-react';
-import { CertificateData, CertificateTemplateType, LeadData, BlogPost } from './types';
+import { CertificateData, CertificateTemplateType, LeadData, BlogPost, SubmittedLead } from './types';
 import { CertificateTemplate } from './components/CertificateTemplate';
 import { CertificateForm } from './components/CertificateForm';
 import { ValidateTab } from './components/ValidateTab';
@@ -111,6 +111,11 @@ export default function App() {
     return stored ? JSON.parse(stored) : INITIAL_DEMO_DATA;
   });
 
+  const [submittedLeads, setSubmittedLeads] = useState<SubmittedLead[]>(() => {
+    const stored = localStorage.getItem('certificadocwb_leads');
+    return stored ? JSON.parse(stored) : [];
+  });
+
   const [activeTab, setActiveTab] = useState<'home' | 'simulator' | 'validate' | 'blog' | 'history'>('home');
   const [activeTemplate, setActiveTemplate] = useState<CertificateTemplateType>('ecpf_a1');
   const [justGenerated, setJustGenerated] = useState<CertificateData | null>(null);
@@ -136,6 +141,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('certificadocwb_records', JSON.stringify(certificates));
   }, [certificates]);
+
+  useEffect(() => {
+    localStorage.setItem('certificadocwb_leads', JSON.stringify(submittedLeads));
+  }, [submittedLeads]);
 
   // Generate unique certificate key
   const generateUniqueId = () => {
@@ -173,8 +182,23 @@ export default function App() {
 
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const leadId = `CWB-LEAD-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newLead: SubmittedLead = {
+      ...leadForm,
+      id: leadId,
+      date: new Date().toISOString(),
+      status: 'pending'
+    };
+    setSubmittedLeads(prev => [newLead, ...prev]);
     setLeadSuccess(true);
-    // Custom simulated alert or flow
+  };
+
+  const handleUpdateLeadStatus = (id: string, status: 'pending' | 'contacted' | 'completed') => {
+    setSubmittedLeads(prev => prev.map(lead => lead.id === id ? { ...lead, status } : lead));
+  };
+
+  const handleDeleteLead = (id: string) => {
+    setSubmittedLeads(prev => prev.filter(lead => lead.id !== id));
   };
 
   // Pricing constants mapping
@@ -193,7 +217,7 @@ export default function App() {
         'Compatível com Windows, MacOS e Linux',
         'Pode ser feito cópia de segurança'
       ],
-      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Gostaria%20de%20emitir%20o%20certificado%20e-CPF%20A1%20pelo%20Certificado%20CWB.'
+      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CPF%20A1%20Digital%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     },
     {
       id: 'ecpf_a3' as CertificateTemplateType,
@@ -209,7 +233,7 @@ export default function App() {
         'Videoconferência rápida inclusa',
         'Inviolabilidade absoluta das chaves privadas'
       ],
-      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Gostaria%20de%20emitir%20o%20certificado%20e-CPF%20A3%20pelo%20Certificado%20CWB.'
+      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CPF%20A3%20Físico%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária,%20opções%20de%20mídia%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     },
     {
       id: 'ecnpj_a1' as CertificateTemplateType,
@@ -225,7 +249,7 @@ export default function App() {
         'Emissão rápida por videochamada do celular',
         'Atendimento prioritário humanizado'
       ],
-      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Gostaria%20de%20emitir%20o%20certificado%20e-CNPJ%20A1%20pelo%20Certificado%20CWB.'
+      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CNPJ%20A1%20Digital%20da%20minha%20empresa%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20os%20documentos%20exigidos%20e%20as%20etapas%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     },
     {
       id: 'ecnpj_a3' as CertificateTemplateType,
@@ -241,7 +265,7 @@ export default function App() {
         'Ideal para assinatura de grandes contratos',
         'Suporte prioritário na instalação em rede'
       ],
-      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Gostaria%20de%20emitir%20o%20certificado%20e-CNPJ%20A3%20pelo%20Certificado%20CWB.'
+      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CNPJ%20A3%20Físico%20da%20minha%20empresa%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária,%20opções%20de%20mídia%20(Token/Cartão)%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     }
   ];
 
@@ -288,13 +312,9 @@ export default function App() {
                 <ShieldCheck className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-display font-bold tracking-tight text-white flex items-center gap-1.5">
+                <h1 className="text-xl font-display font-bold tracking-tight text-white">
                   Certificado CWB
-                  <span className="text-[9px] uppercase bg-indigo-500/20 text-indigo-300 font-bold px-1.5 py-0.5 rounded border border-indigo-500/25 font-mono tracking-widest leading-none">
-                    DOMÍNIO OFICIAL
-                  </span>
                 </h1>
-                <p className="text-[10px] text-slate-400 font-mono">certificadocwb.com.br</p>
               </div>
             </div>
 
@@ -345,7 +365,7 @@ export default function App() {
 
             {/* Top CTA */}
             <a
-              href="https://wa.me/5541992447846?text=Olá!%20Encontrei%20vocês%20no%20domínio%20certificadocwb.com.br%20e%20gostaria%20de%20emitir%20um%20certificado%20digital."
+              href="https://wa.me/5541992447846?text=Olá!%20Acessei%20o%20site%20certificadocwb.com.br%20e%20tenho%20interesse%20em%20emitir%20um%20certificado%20digital.%20Gostaria%20de%20receber%20orientações%20sobre%20o%20processo%20de%20emissão,%20documentação%20necessária%20e%20opções%20disponíveis.%20Aguardo%20seu%20retorno.%20Obrigado!"
               target="_blank"
               referrerPolicy="no-referrer"
               className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5 transition-all select-none"
@@ -693,7 +713,7 @@ export default function App() {
                         <h5 className="font-bold text-xs">Cotação Enviada!</h5>
                         <p className="text-[10px] text-emerald-700">Um consultor experiente entrará em contato via WhatsApp/E-mail.</p>
                         <a
-                          href={`https://wa.me/5541992447846?text=Olá!%20Enviei%20meus%20dados%20no%20formulário%20de%20contato%20da%20Certificado%20CWB%20como%20${leadForm.name}%20e%20gostaria%20de%20prioridade.`}
+                          href={`https://wa.me/5541992447846?text=Olá!%20Enviei%20minha%20solicitação%20no%20site%20certificadocwb.com.br%20como%20${encodeURIComponent(leadForm.name)}.%20Gostaria%20de%20receber%20atendimento%20prioritário%20para%20as%20etapas%20de%20emissão%20do%20meu%20certificado%20digital.`}
                           target="_blank"
                           referrerPolicy="no-referrer"
                           className="inline-flex items-center space-x-1 py-1.5 px-3 bg-emerald-600 hover:bg-emerald-750 text-white rounded-lg text-[10px] font-bold pt-1.5"
@@ -829,7 +849,7 @@ export default function App() {
                   <div className="text-center pt-4">
                     <p className="text-xs text-slate-400 mb-2">Ainda tem alguma dúvida técnica sobre chaves de acesso?</p>
                     <a
-                      href="https://wa.me/5541992447846?text=Olá,%20tenho%20uma%20dúvida%20sobre%20emissão%20pelo%20site%20certificadocwb.com.br"
+                      href="https://wa.me/5541992447846?text=Olá!%20Acessei%20o%20site%20certificadocwb.com.br%20e%20gostaria%20de%20esclarecer%20uma%20dúvida%20técnica%20sobre%20a%20emissão%20de%20certificado%20digital.%20Podem%20me%20ajudar%3F"
                       target="_blank"
                       referrerPolicy="no-referrer"
                       className="inline-flex items-center space-x-1.5 text-indigo-400 hover:text-indigo-300 font-bold text-xs"
@@ -1097,6 +1117,9 @@ export default function App() {
                 }}
                 onDelete={handleDeleteCertificate}
                 onGoToCreate={() => setActiveTab('simulator')}
+                submittedLeads={submittedLeads}
+                onUpdateLeadStatus={handleUpdateLeadStatus}
+                onDeleteLead={handleDeleteLead}
               />
             </motion.div>
           )}
@@ -1119,12 +1142,6 @@ export default function App() {
                 <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
                   Proporcionamos segurança jurídica, criptografia oficial, emissão ágil por videoconferência em todo o território nacional. Localizados em Curitiba, conectados ao Brasil.
                 </p>
-                <div className="font-mono text-[10px] text-indigo-400">
-                  <span>DOMÍNIO RESGATADO: </span>
-                  <a href="https://certificadocwb.com.br" className="underline font-bold" target="_blank" rel="noreferrer">
-                    certificadocwb.com.br
-                  </a>
-                </div>
               </div>
 
               {/* Col Middle Links */}

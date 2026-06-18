@@ -21,6 +21,12 @@ export interface LeadData {
   message?: string;
 }
 
+export interface SubmittedLead extends LeadData {
+  id: string;
+  date: string;
+  status: 'pending' | 'contacted' | 'completed';
+}
+
 export interface BlogPost {
   slug: string;
   title: string;
