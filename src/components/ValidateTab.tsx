@@ -5,9 +5,15 @@ import { CertificateTemplate } from './CertificateTemplate';
 
 interface ValidateTabProps {
   certificates: CertificateData[];
+  initialSelected?: CertificateData | null;
+  onClearSelection?: () => void;
 }
 
-export const ValidateTab: React.FC<ValidateTabProps> = ({ certificates }) => {
+export const ValidateTab: React.FC<ValidateTabProps> = ({ 
+  certificates, 
+  initialSelected, 
+  onClearSelection 
+}) => {
   const [code, setCode] = useState('');
   const [searching, setSearching] = useState(false);
   const [result, setResult] = useState<{
@@ -15,6 +21,17 @@ export const ValidateTab: React.FC<ValidateTabProps> = ({ certificates }) => {
     found: boolean;
     cert?: CertificateData;
   }>({ searched: false, found: false });
+
+  React.useEffect(() => {
+    if (initialSelected) {
+      setCode(initialSelected.id);
+      setResult({
+        searched: true,
+        found: true,
+        cert: initialSelected,
+      });
+    }
+  }, [initialSelected]);
 
   const handleValidate = (e: React.FormEvent) => {
     e.preventDefault();
