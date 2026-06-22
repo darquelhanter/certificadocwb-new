@@ -26,7 +26,8 @@ import {
   ArrowRight,
   ThumbsUp,
   BookOpen,
-  Printer
+  Printer,
+  Video
 } from 'lucide-react';
 import { CertificateData, CertificateTemplateType, LeadData, BlogPost, SubmittedLead } from './types';
 import { CertificateTemplate } from './components/CertificateTemplate';
@@ -51,7 +52,7 @@ const BLOG_ARTICLES: BlogPost[] = [
     title: 'Como funciona a emissão de certificado digital por videoconferência?',
     excerpt: 'Não precisa mais se deslocar! Descubra como emitir seu e-CPF ou e-CNPJ na comodidade da sua casa ou escritório em Curitiba em poucos minutos.',
     content: 'Com as novas resoluções do ITI (Instituto Nacional de Tecnologia da Informação), é possível autenticar e emitir certificados digitais 100% online por videoconferência.\n\n### Quem pode emitir por videoconferência?\nQualquer cidadão brasileiro que possua Carteira Nacional de Habilitação (CNH) ou dados biométricos já cadastrados na Justiça Eleitoral / ICP-Brasil.\n\n### O passo a passo simples:\n1. **Agendamento:** Você escolhe o seu certificado e agenda um horário de sua conveniência.\n2. **Envio de Documentos:** Envia de forma digitalizada fotos de seus documentos pessoais (RG/CNH e contrato social no caso de empresas).\n3. **A Chamada:** Um agente oficial da Certificado CWB fará uma rápida chamada de vídeo de 5 minutos para validar sua face e conferir os dados.\n4. **Pronto para download:** Imediatamente após a chamada, o link para instalação do seu certificado A1 é enviado diretamente para o seu WhatsApp!',
-    coverImage: 'https://images.unsplash.com/photo-1616584163916-b11a43ef6a65?auto=format&fit=crop&w=800&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80',
     publishDate: '2026-06-15',
     readingTime: '3 min de leitura',
     category: 'Tecnologia'
@@ -388,15 +389,15 @@ export default function App() {
                 <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
                   <div className="space-y-6">
                     <div className="inline-flex items-center space-x-2 px-3 py-1 bg-indigo-500/10 text-indigo-300 rounded-full border border-indigo-500/20 text-xs font-semibold">
-                      <span>Emissão em Curitiba e videoconferência nacional</span>
+                      <span>Validação Digital com Cobertura e Validade em todo o Brasil</span>
                     </div>
                     
                     <h2 className="text-3xl sm:text-5xl font-display font-extrabold tracking-tight leading-none text-white">
-                      Seu Certificado Digital em <span className="text-indigo-400 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-indigo-300 to-indigo-200">Minutos, Não Horas</span>
+                      Seu Certificado Digital em <span className="text-indigo-400 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-indigo-300 to-indigo-200">Minutos</span>
                     </h2>
 
-                    <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
-                      Emissão descomplicada de e-CPF e e-CNPJ com validação segura 100% online. Tenha seu documento assinado perante a Receita Federal sem sair do escritório.
+                    <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                      Emissão simplificada de e-CPF e e-CNPJ por videoconferência com segurança e validade jurídica em todo o território nacional. Tenha o seu certificado emitido e pronto de forma rápida, de onde você estiver.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
@@ -413,18 +414,18 @@ export default function App() {
                     </div>
 
                     {/* Micro checkmarks */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-6 border-t border-slate-900 text-slate-400 text-xs max-w-lg mx-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-6 border-t border-slate-900 text-slate-400 text-xs max-w-xl mx-auto">
                       <div className="flex items-center justify-center space-x-1.5">
                         <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
                         <span>Padrão ICP-Brasil</span>
                       </div>
                       <div className="flex items-center justify-center space-x-1.5">
                         <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
-                        <span>Suporte Curitiba (CWB)</span>
+                        <span>Emissão de qualquer lugar do Brasil</span>
                       </div>
                       <div className="flex items-center justify-center space-x-1.5">
                         <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
-                        <span>Videochamada 5min</span>
+                        <span>Videochamada em 5 minutos</span>
                       </div>
                     </div>
                   </div>
@@ -502,32 +503,130 @@ export default function App() {
               </section>
 
               {/* HOW IT WORKS CHRONOLOGICAL TIMELINE */}
-              <section className="bg-slate-900 border-y border-slate-800 text-white py-16">
+              <section className="bg-slate-50 border-y border-slate-200/60 py-16">
                 <div className="max-w-7xl mx-auto px-4 space-y-12">
                   <div className="text-center space-y-3">
-                    <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest block">Sem Complicação</span>
-                    <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white">
-                      Apenas 4 passos simples para seu certificado digital
+                    <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest block font-mono">Sem Complicação</span>
+                    <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 tracking-tight">
+                      Entenda como funciona o processo de emissão do seu Certificado Digital
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
-                      Esqueça papelada, reuniões físicas e filas de cartórios. Emitimos seu certificado digital de forma descomplicada.
+                    <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto leading-relaxed">
+                      Para facilitar sua experiência, dividimos o processo de emissão em 5 etapas simples:
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+                  {/* 5 column cards styled to match the elegant site design */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 relative">
                     {[
-                      { step: '1', title: 'Compre Doméstico', desc: 'Escolha e adquira seu certificado e-CPF ou e-CNPJ na tabela de planos transparente informada abaixo.' },
-                      { step: '2', title: 'Videoconferência', desc: 'Faça uma videochamada de conformidade rápida de 5 minutos direto com seu celular ou laptop.' },
-                      { step: '3', title: 'Identificação Criptográfica', desc: 'Nossa equipe credenciada homologa a criptografia das suas chaves de acesso.' },
-                      { step: '4', title: 'Pronto Para Uso!', desc: 'Instale o seu certificado de arquivo em 1 clique ou configure em mídias USB e comece a assinar.' }
+                      { 
+                        step: '1', 
+                        title: 'Cadastro', 
+                        desc: 'Preencha seus dados para que nossa equipe possa entrar em contato. Se preferir, você também pode nos chamar pelo WhatsApp logo após concluir o cadastro.' 
+                      },
+                      { 
+                        step: '2', 
+                        title: 'Pagamento', 
+                        desc: 'Realize o pagamento referente ao certificado digital escolhido. Após a confirmação, daremos continuidade ao processo de emissão.' 
+                      },
+                      { 
+                        step: '3', 
+                        title: 'Envio da Documentação', 
+                        desc: 'Envie seus documentos pessoais para análise. Recomendamos o envio da CNH, por ser um documento mais completo. Caso seja necessário, nossa equipe solicitará documentos complementares.' 
+                      },
+                      { 
+                        step: '4', 
+                        title: 'Validação de Identidade', 
+                        desc: 'Você receberá um código de confirmação por SMS ou e-mail. Em seguida, basta acessar a sala de videoconferência no horário agendado, onde um de nossos atendentes realizará a validação dos seus dados.' 
+                      },
+                      { 
+                        step: '5', 
+                        title: 'Emissão do Certificado', 
+                        desc: 'Após a aprovação da validação, seu certificado digital estará disponível para emissão. Caso tenha alguma dificuldade durante essa etapa, nossa equipe de suporte estará pronta para auxiliá-lo.' 
+                      },
                     ].map((item, idx) => (
-                      <div key={idx} className="bg-slate-950 p-6 rounded-2xl border border-slate-800 relative space-y-3">
-                        <span className="absolute top-4 right-4 text-3xl font-display font-black text-slate-800">{item.step}</span>
-                        <h4 className="text-xs uppercase font-mono tracking-widest text-indigo-400 font-black">ETAPA {item.step}</h4>
-                        <h5 className="text-base font-bold text-white tracking-tight">{item.title}</h5>
-                        <p className="text-xs text-slate-400 leading-relaxed">{item.desc}</p>
+                      <div 
+                        key={idx} 
+                        className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs hover:shadow-md hover:border-indigo-400 transition-all flex flex-col justify-between group relative overflow-hidden"
+                      >
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-indigo-50 group-hover:bg-indigo-600 text-indigo-600 group-hover:text-white font-mono text-xs font-extrabold transition-all duration-300">
+                              {item.step}
+                            </span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">
+                              Passo {item.step}
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            <h4 className="text-sm font-extrabold text-slate-800 group-hover:text-indigo-900 transition-colors">
+                              {item.title}
+                            </h4>
+                            <p className="text-[11px] leading-relaxed text-slate-500 font-medium group-hover:text-slate-600 transition-colors">
+                              {item.desc}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     ))}
+                  </div>
+
+                  {/* Clean footer step alignment line */}
+                  <div className="text-center pt-2">
+                    <p className="inline-flex items-center justify-center space-x-2 text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-150 px-5 py-2.5 rounded-full shadow-2xs">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span>Pronto! Após a conclusão dessas etapas, seu Certificado Digital estará ativo e pronto para uso.</span>
+                    </p>
+                  </div>
+
+                  {/* VIDEOCONFERENCIA CRITERIA AND PROCESS - HIGHLIGHT BANNER */}
+                  <div className="bg-white rounded-3xl border border-slate-200/80 p-6 md:p-8 shadow-xs max-w-4xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <div className="md:col-span-3 flex flex-col items-center justify-center text-center p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/50">
+                      <div className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center mb-2 shadow-sm">
+                        <Video className="w-5 h-5" />
+                      </div>
+                      <span className="text-xs font-bold text-indigo-900 uppercase tracking-widest block">Videoconferência</span>
+                      <span className="text-[10px] text-indigo-600 font-bold block mt-1">100% Online</span>
+                    </div>
+
+                    <div className="md:col-span-9 space-y-4">
+                      <h4 className="text-base font-bold text-slate-800 flex items-center space-x-2">
+                        <span className="w-2 h-2 rounded-full bg-indigo-600 inline-block" />
+                        <span>Requisitos e Passo a Passo da Vídeo</span>
+                      </h4>
+                      
+                      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        <p className="bg-indigo-50/30 border-l-4 border-indigo-600 p-3 rounded-r-xl text-slate-700 font-medium">
+                          <strong>Critérios de Aptidão:</strong> Para emitir seu certificado por videoconferência você deve atender a um desses 2 critérios: <strong>Ter CNH</strong> ou <strong>já ter feito certificado</strong>. Seguindo algum desses critérios você está apto.
+                        </p>
+                        
+                        <div className="space-y-2 pt-1 border-t border-slate-100">
+                          <h5 className="font-bold text-slate-800 text-xs uppercase tracking-wide">Como é o processo da video? É bem simples:</h5>
+                          <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-1 text-[11px] text-slate-500">
+                            <li className="flex items-start space-x-2">
+                              <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">1</span>
+                              <span>Após o cadastro, enviamos um link para você acessar a sala da videoconferência.</span>
+                            </li>
+                            <li className="flex items-start space-x-2">
+                              <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">2</span>
+                              <span>Após seu acesso à sala, tiramos sua foto e iniciamos a gravação.</span>
+                            </li>
+                            <li className="flex items-start space-x-2">
+                              <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">3</span>
+                              <span>Na video, nosso atendente faz algumas simples perguntas obrigatórias.</span>
+                            </li>
+                            <li className="flex items-start space-x-2">
+                              <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">4</span>
+                              <span>Após as respostas, encerramos a gravação. Pronto, seu processo de emissão foi concluído!</span>
+                            </li>
+                          </ol>
+                        </div>
+                        
+                        <p className="text-[11px] font-semibold text-indigo-600 flex items-center space-x-1.5 pt-2">
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                          <span>Mais praticidade para você com a mesma segurança!</span>
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -875,6 +974,7 @@ export default function App() {
                   <img 
                     src={activeArticle.coverImage} 
                     alt={activeArticle.title} 
+                    referrerPolicy="no-referrer"
                     className="w-full h-64 object-cover rounded-2xl border"
                   />
 
@@ -915,6 +1015,7 @@ export default function App() {
                       <img 
                         src={art.coverImage} 
                         alt={art.title} 
+                        referrerPolicy="no-referrer"
                         className="w-full h-44 object-cover border-b"
                       />
                       <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
