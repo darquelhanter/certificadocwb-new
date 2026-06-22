@@ -313,8 +313,8 @@ export default function App() {
                 <ShieldCheck className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-display font-bold tracking-tight text-white">
-                  Certificado CWB
+                <h1 className="text-xl font-display font-bold tracking-tight text-white uppercase">
+                  CERTIFICADO DIGITAL
                 </h1>
               </div>
             </div>
@@ -459,7 +459,7 @@ export default function App() {
                 <div className="text-center space-y-3">
                   <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest block">Benefícios de Destaque</span>
                   <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-800">
-                    Por que escolher a Certificado CWB?
+                    Por que escolher a CERTIFICADO DIGITAL?
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
                     Unimos atendimento regional especializado, suporte humanizado em Curitiba e a tecnologia mais ágil do Brasil para garantir a perfeita emissão das suas chaves criptográficas.
@@ -1089,10 +1089,10 @@ export default function App() {
                   <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
                     <ShieldCheck className="w-5 h-5 text-white" />
                   </div>
-                  <strong className="text-lg font-display font-bold">Certificado CWB</strong>
+                  <strong className="text-lg font-display font-bold uppercase tracking-tight">CERTIFICADO DIGITAL</strong>
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-                  Proporcionamos segurança jurídica, criptografia oficial, emissão ágil por videoconferência em todo o território nacional. Localizados em Curitiba, conectados ao Brasil.
+                  Proporcionamos segurança jurídica, criptografia oficial, emissão ágil por videoconferência em todo o território nacional. Conectamos você ao Brasil inteiro de forma 100% digital.
                 </p>
               </div>
 
@@ -1142,9 +1142,9 @@ export default function App() {
             {/* Bottom compliance line */}
             <div className="flex flex-col sm:flex-row justify-between items-center text-[10px] text-slate-400 gap-4">
               <div className="space-y-1 text-center sm:text-left leading-normal">
-                <span>Certificado CWB © 2026. Todos os direitos reservados.</span>
+                <span>CERTIFICADO DIGITAL © 2026. Todos os direitos reservados.</span>
                 <p className="text-[9px] text-slate-500">
-                  A Certificado CWB realiza suporte e encaminhamento. Todas as validações por videochamada são auditadas de acordo com as diretrizes do Instituto Nacional de Tecnologia da Informação (ITI) e ICP-Brasil.
+                  A CERTIFICADO DIGITAL realiza suporte e encaminhamento. Todas as validações por videochamada são auditadas de acordo com as diretrizes do Instituto Nacional de Tecnologia da Informação (ITI) e ICP-Brasil.
                 </p>
               </div>
 
