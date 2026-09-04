@@ -26,7 +26,6 @@ import {
   ArrowRight,
   ThumbsUp,
   BookOpen,
-  Printer,
   Video
 } from 'lucide-react';
 import { CertificateData, CertificateTemplateType, LeadData, BlogPost, SubmittedLead } from './types';
@@ -121,6 +120,18 @@ export default function App() {
   const [activeTemplate, setActiveTemplate] = useState<CertificateTemplateType>('ecpf_a1');
   const [justGenerated, setJustGenerated] = useState<CertificateData | null>(null);
   const [selectedForPreview, setSelectedForPreview] = useState<CertificateData | null>(null);
+  const [urlValidateCode, setUrlValidateCode] = useState<string | null>(null);
+
+  // Deep link from a scanned certificate QR code: ?validar=CWB-XXXXX-XXXX
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('validar');
+    if (code) {
+      setUrlValidateCode(code);
+      setActiveTab('validate');
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 
   // Lead feedback variables
   const [leadForm, setLeadForm] = useState<LeadData>({
@@ -132,6 +143,8 @@ export default function App() {
     message: ''
   });
   const [leadSuccess, setLeadSuccess] = useState(false);
+  const [leadSubmitting, setLeadSubmitting] = useState(false);
+  const [leadError, setLeadError] = useState<string | null>(null);
   const [activeArticle, setActiveArticle] = useState<BlogPost | null>(null);
   const [pricingFilter, setPricingFilter] = useState<'all' | 'ecpf' | 'ecnpj'>('all');
 
@@ -181,8 +194,11 @@ export default function App() {
     }
   };
 
-  const handleLeadSubmit = (e: React.FormEvent) => {
+  const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLeadError(null);
+    setLeadSubmitting(true);
+
     const leadId = `CWB-LEAD-${Math.floor(1000 + Math.random() * 9000)}`;
     const newLead: SubmittedLead = {
       ...leadForm,
@@ -190,8 +206,44 @@ export default function App() {
       date: new Date().toISOString(),
       status: 'pending'
     };
+
+    // Always keep the lead in the local CRM, even if the webhook notification fails below
     setSubmittedLeads(prev => [newLead, ...prev]);
-    setLeadSuccess(true);
+
+    const rawPhone = leadForm.phone.replace(/\D/g, '');
+    // Brazilian local numbers are 10-11 digits (DDD + number); anything longer
+    // already includes the country code. Checking for a "55" prefix alone is
+    // wrong because 55 is also a real DDD (Passo Fundo/Caxias do Sul-RS).
+    const telefone = rawPhone.length <= 11 ? `55${rawPhone}` : rawPhone;
+
+    try {
+      const response = await fetch('/api/submit-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id_lead: leadId,
+          nome: leadForm.name,
+          telefone,
+          telefone_original: leadForm.phone,
+          email: leadForm.email,
+          cidade: leadForm.city,
+          tipo_interesse: leadForm.interestType,
+          mensagem: leadForm.message || '',
+          data: newLead.date,
+          origem: 'site_certificadocwb',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`status ${response.status}`);
+      }
+    } catch (err) {
+      console.error('Erro ao notificar o webhook de leads:', err);
+      setLeadError('Seus dados foram registrados, mas houve uma falha ao notificar nossa equipe automaticamente. Vamos entrar em contato assim que possível.');
+    } finally {
+      setLeadSubmitting(false);
+      setLeadSuccess(true);
+    }
   };
 
   const handleUpdateLeadStatus = (id: string, status: 'pending' | 'contacted' | 'completed') => {
@@ -763,6 +815,9 @@ export default function App() {
                         <CheckCircle className="w-8 h-8 mx-auto text-emerald-600" />
                         <h5 className="font-bold text-xs">Cotação Enviada!</h5>
                         <p className="text-[10px] text-emerald-700">Um consultor experiente entrará em contato via WhatsApp/E-mail.</p>
+                        {leadError && (
+                          <p className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2">{leadError}</p>
+                        )}
                         <a
                           href={`https://wa.me/5541992447846?text=Olá!%20Enviei%20minha%20solicitação%20no%20site%20certificadocwb.com.br%20como%20${encodeURIComponent(leadForm.name)}.%20Gostaria%20de%20receber%20atendimento%20prioritário%20para%20as%20etapas%20de%20emissão%20do%20meu%20certificado%20digital.`}
                           target="_blank"
@@ -821,9 +876,10 @@ export default function App() {
                         <button
                           id="btn-lead-submit"
                           type="submit"
-                          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-sm transition"
+                          disabled={leadSubmitting}
+                          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-sm transition disabled:opacity-60"
                         >
-                          Solicitar Atendimento
+                          {leadSubmitting ? 'Enviando...' : 'Solicitar Atendimento'}
                         </button>
                       </form>
                     )}
@@ -934,9 +990,10 @@ export default function App() {
               exit={{ opacity: 0, y: -15 }}
               className="max-w-7xl mx-auto px-4 py-8"
             >
-              <ValidateTab 
+              <ValidateTab
                 certificates={certificates}
                 initialSelected={selectedForPreview}
+                initialCode={urlValidateCode}
                 onClearSelection={() => setSelectedForPreview(null)}
               />
             </motion.div>

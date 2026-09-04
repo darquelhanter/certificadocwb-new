@@ -6,13 +6,15 @@ import { CertificateTemplate } from './CertificateTemplate';
 interface ValidateTabProps {
   certificates: CertificateData[];
   initialSelected?: CertificateData | null;
+  initialCode?: string | null;
   onClearSelection?: () => void;
 }
 
-export const ValidateTab: React.FC<ValidateTabProps> = ({ 
-  certificates, 
-  initialSelected, 
-  onClearSelection 
+export const ValidateTab: React.FC<ValidateTabProps> = ({
+  certificates,
+  initialSelected,
+  initialCode,
+  onClearSelection
 }) => {
   const [code, setCode] = useState('');
   const [searching, setSearching] = useState(false);
@@ -30,8 +32,18 @@ export const ValidateTab: React.FC<ValidateTabProps> = ({
         found: true,
         cert: initialSelected,
       });
+    } else if (initialCode) {
+      const query = initialCode.trim().toUpperCase();
+      const match = certificates.find(c => c.id.toUpperCase() === query);
+      setCode(initialCode);
+      setResult({
+        searched: true,
+        found: !!match,
+        cert: match,
+      });
     }
-  }, [initialSelected]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialSelected, initialCode]);
 
   const handleValidate = (e: React.FormEvent) => {
     e.preventDefault();

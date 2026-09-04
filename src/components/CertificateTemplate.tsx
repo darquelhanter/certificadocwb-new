@@ -1,4 +1,5 @@
 import React from 'react';
+import { create as createQRCode } from 'qrcode';
 import { ShieldCheck, Calendar, FileText, User, Building, Cpu, Globe, Check, Lock } from 'lucide-react';
 import { CertificateData, CertificateTemplateType } from '../types';
 
@@ -63,25 +64,25 @@ export const CertificateTemplate: React.FC<CertificateTemplateProps> = ({ data, 
 
   const currentTheme = getThemeClass(certificateType);
 
-  // Quick abstract binary grid QR mockup
-  const MockQR = () => (
+  // Real QR code encoding the public validation URL for this certificate
+  const validationUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}${window.location.pathname}?validar=${encodeURIComponent(id)}`
+    : `https://certificadocwb.com.br/?validar=${encodeURIComponent(id)}`;
+
+  const qrModules = createQRCode(validationUrl, { errorCorrectionLevel: 'M' }).modules;
+  const qrSize = qrModules.size;
+
+  const CertificateQR = () => (
     <div className="w-16 h-16 bg-white p-1 rounded-lg flex items-center justify-center shrink-0 border border-slate-700/50">
-      <svg viewBox="0 0 100 100" className="w-full h-full text-slate-950" aria-hidden="true">
-        {/* Anchor patterns */}
-        <rect x="0" y="0" width="25" height="25" fill="currentColor" />
-        <rect x="4" y="4" width="17" height="17" fill="white" />
-        <rect x="8" y="8" width="9" height="9" fill="currentColor" />
-
-        <rect x="75" y="0" width="25" height="25" fill="currentColor" />
-        <rect x="79" y="4" width="17" height="17" fill="white" />
-        <rect x="83" y="8" width="9" height="9" fill="currentColor" />
-
-        <rect x="0" y="75" width="25" height="25" fill="currentColor" />
-        <rect x="4" y="79" width="17" height="17" fill="white" />
-        <rect x="8" y="83" width="9" height="9" fill="currentColor" />
-
-        {/* Abstract blocks */}
-        <path d="M40,5h10v10h-10zm15,10h10v10h-10zm-15,10h15v10h-15zm-35,20h10v15h-10zm15,-5h10v10h-10zm15,5h15v10h-15zm20,-5h10v20h-10zm15,0h25v10h-25zm5,15h15v15h-15zm-35,10h20v10h-20zm-35,-15h15v10h-15zm20,10h10v10h-10zm20,20h15v10h-15zm25,0h10v10h-10zm15,0h10v10h-10z" fill="currentColor" />
+      <svg viewBox={`0 0 ${qrSize} ${qrSize}`} className="w-full h-full text-slate-950" shapeRendering="crispEdges" role="img" aria-label={`QR Code de validação do certificado ${id}`}>
+        <rect x="0" y="0" width={qrSize} height={qrSize} fill="white" />
+        {Array.from({ length: qrSize }).map((_, row) =>
+          Array.from({ length: qrSize }).map((_, col) =>
+            qrModules.get(row, col) ? (
+              <rect key={`${row}-${col}`} x={col} y={row} width={1} height={1} fill="currentColor" />
+            ) : null
+          )
+        )}
       </svg>
     </div>
   );
@@ -160,7 +161,7 @@ export const CertificateTemplate: React.FC<CertificateTemplateProps> = ({ data, 
 
         {/* QR Code and Certificate Code verification */}
         <div className="col-span-4 flex flex-col items-end justify-center text-right space-y-2 select-none">
-          <MockQR />
+          <CertificateQR />
           <div className="space-y-0.5">
             <span className="text-[8px] text-slate-500 font-bold block">VERIFICAÇÃO DIGITAL</span>
             <span className="text-[10px] font-mono text-indigo-400 font-extrabold bg-slate-900/50 px-1.5 py-0.5 rounded border border-slate-800 tracking-wider inline-block select-all">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Copy, Printer, Check, Plus, ClipboardCheck, Trash2, Building, User, Phone, CheckCircle2 } from 'lucide-react';
+import { Search, Copy, Eye, Check, Plus, ClipboardCheck, Trash2, Building, User, Phone, CheckCircle2, Zap, Loader2 } from 'lucide-react';
 import { CertificateData, SubmittedLead } from '../types';
 
 interface HistoryTabProps {
@@ -24,6 +24,47 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
   const [activeSubTab, setActiveSubTab] = useState<'certificates' | 'leads'>('certificates');
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const [testingWebhook, setTestingWebhook] = useState(false);
+  const [webhookTestResult, setWebhookTestResult] = useState<{ ok: boolean; message: string } | null>(null);
+
+  const handleTestWebhook = async () => {
+    setTestingWebhook(true);
+    setWebhookTestResult(null);
+
+    const testPayload = {
+      id_lead: `CWB-TEST-${Math.floor(1000 + Math.random() * 9000)}`,
+      nome: 'Lead de Teste',
+      telefone: '5541999998888',
+      telefone_original: '(41) 99999-8888',
+      email: 'teste@certificadocwb.com.br',
+      cidade: 'Curitiba',
+      tipo_interesse: 'general',
+      mensagem: 'Disparo de teste feito pelo Painel de Leads.',
+      data: new Date().toISOString(),
+      origem: 'teste_painel_admin',
+    };
+
+    try {
+      const response = await fetch('/api/submit-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(testPayload),
+      });
+
+      const body = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setWebhookTestResult({ ok: false, message: body.error || `O servidor respondeu com status ${response.status}.` });
+      } else {
+        setWebhookTestResult({ ok: true, message: 'Mensagem de teste disparada com sucesso pelo WhatsApp da Evolution API!' });
+      }
+    } catch (err) {
+      setWebhookTestResult({ ok: false, message: 'Falha de rede ao contatar nosso servidor. Verifique se ele está rodando.' });
+    } finally {
+      setTestingWebhook(false);
+    }
+  };
 
   const handleCopyId = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -95,6 +136,37 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
           )}
         </button>
       </div>
+
+      {/* WHATSAPP INTEGRATION TEST PANEL */}
+      {activeSubTab === 'leads' && (
+        <div className="bg-slate-50 rounded-xl border border-slate-150 p-4 space-y-2.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h4 className="text-[11px] font-bold text-slate-600">Integração WhatsApp (Evolution API)</h4>
+              <p className="text-[10px] text-slate-400">Dispara uma mensagem de teste através do nosso servidor, para validar a conexão a qualquer momento.</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleTestWebhook}
+              disabled={testingWebhook}
+              className="inline-flex items-center justify-center space-x-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white rounded-lg text-xs font-semibold transition whitespace-nowrap"
+            >
+              {testingWebhook ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
+              <span>{testingWebhook ? 'Disparando...' : 'Disparar Lead de Teste'}</span>
+            </button>
+          </div>
+
+          {webhookTestResult && (
+            <p className={`text-[10px] p-2 rounded-lg border ${
+              webhookTestResult.ok
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : 'bg-rose-50 text-rose-700 border-rose-200'
+            }`}>
+              {webhookTestResult.message}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* SUB-TAB CONTENTS */}
       {activeSubTab === 'certificates' ? (
@@ -193,7 +265,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
                           }}
                           className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition"
                         >
-                          <Printer className="w-4 h-4" />
+                          <Eye className="w-4 h-4" />
                         </button>
                         <button
                           title="Excluir Registro"
@@ -247,8 +319,9 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {filteredLeads.map((lead) => {
                   const rawPhone = lead.phone.replace(/\D/g, '');
-                  // Setup WhatsApp direct contact link with professional pre-filled response
-                  const waNumber = rawPhone.startsWith('55') ? rawPhone : `55${rawPhone}`;
+                  // Setup WhatsApp direct contact link with professional pre-filled response.
+                  // Length-based check: a "55" prefix alone is ambiguous since 55 is also a real DDD.
+                  const waNumber = rawPhone.length <= 11 ? `55${rawPhone}` : rawPhone;
                   const waLink = `https://wa.me/${waNumber}?text=Olá%20${encodeURIComponent(lead.name)},%20sou%20da%20Certificado%20CWB%20referente%20à%20sua%20solicitação%20no%20nosso%20site.%20Como%20posso%20ajudar%3F`;
 
                   return (
