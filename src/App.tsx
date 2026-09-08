@@ -73,7 +73,7 @@ export default function App() {
   });
 
   const [activeTab, setActiveTab] = useState<'home' | 'blog' | 'history'>('home');
-  const [paymentPlan, setPaymentPlan] = useState<{ title: string; price: string } | null>(null);
+  const [paymentPlan, setPaymentPlan] = useState<{ title: string; price: string; needsMedia: boolean } | null>(null);
 
   // Lead feedback variables
   const [leadForm, setLeadForm] = useState<LeadData>({
@@ -158,7 +158,8 @@ export default function App() {
     setSubmittedLeads(prev => prev.filter(lead => lead.id !== id));
   };
 
-  // Pricing constants mapping
+  // Pricing constants mapping. A3 plans are certificate-only — physical media
+  // (Token/Cartão/Leitora) are sold separately below and bundled at checkout.
   const PRICING_PLANS = [
     {
       id: 'ecpf_a1' as CertificateTemplateType,
@@ -167,6 +168,7 @@ export default function App() {
       duration: '1 Ano / 12 Meses',
       badge: 'Mais Recomendado',
       desc: 'Ideal para declaração de IRPF, acesso ao portal e-CAC, assinatura de contratos e prefeituras em Curitiba.',
+      needsMedia: false,
       features: [
         'Instalação no computador ou navegador',
         'Emissão 100% online por videoconferência',
@@ -177,36 +179,38 @@ export default function App() {
       whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CPF%20A1%20Digital%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     },
     {
-      id: 'ecpf_a1' as CertificateTemplateType,
-      title: 'e-CPF A1 Digital (3 Meses)',
-      price: '108,90',
-      duration: '3 Meses',
-      badge: 'Mais Econômico',
-      desc: 'Ideal para uma necessidade pontual ou de curto prazo, sem o compromisso de um plano anual.',
+      id: 'ecpf_a3' as CertificateTemplateType,
+      title: 'e-CPF A3 Físico (1 Ano)',
+      price: '159,90',
+      duration: '1 Ano / 12 Meses',
+      badge: 'Máxima Segurança',
+      desc: 'Perfeito para advogados credenciados no Projudi, médicos credenciados e profissionais liberais. Certificado apenas — mídia física (Token ou Cartão + Leitora) vendida à parte, com desconto ao combinar.',
+      needsMedia: true,
       features: [
-        'Instalação no computador ou navegador',
-        'Emissão 100% online por videoconferência',
-        'Suporte técnico especializado em Curitiba',
-        'Compatível com Windows, MacOS e Linux',
-        'Mesma validade jurídica do plano anual'
+        'Certificado gravado em Token USB ou Cartão',
+        'Válido por 1 ano inteiro',
+        'Videoconferência rápida inclusa',
+        'Inviolabilidade absoluta das chaves privadas',
+        'Adicione Token ou Cartão/Leitora com 10% de desconto'
       ],
-      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CPF%20A1%20Digital%20(3%20meses)%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
+      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CPF%20A3%20Físico%20(1%20ano)%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária,%20opções%20de%20mídia%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     },
     {
       id: 'ecpf_a3' as CertificateTemplateType,
-      title: 'e-CPF A3 Físico',
-      price: '229',
-      duration: '3 Anos / 36 Meses',
-      badge: 'Máxima Segurança',
-      desc: 'Perfeito para advogados credenciados no Projudi, médicos credenciados e profissionais liberais.',
+      title: 'e-CPF A3 Físico (2 Anos)',
+      price: '199,90',
+      duration: '2 Anos / 24 Meses',
+      badge: 'Maior Validade',
+      desc: 'Mesma segurança do plano de 1 ano, com validade estendida para quem não quer renovar tão cedo. Certificado apenas — mídia física vendida à parte, com desconto ao combinar.',
+      needsMedia: true,
       features: [
-        'Armazenamento físico em mídia criptográfica',
-        'Válido por 3 anos inteiros',
-        'Opção de Token USB ou Cartão inteligente',
+        'Certificado gravado em Token USB ou Cartão',
+        'Válido por 2 anos inteiros',
         'Videoconferência rápida inclusa',
-        'Inviolabilidade absoluta das chaves privadas'
+        'Inviolabilidade absoluta das chaves privadas',
+        'Adicione Token ou Cartão/Leitora com 10% de desconto'
       ],
-      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CPF%20A3%20Físico%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária,%20opções%20de%20mídia%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
+      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CPF%20A3%20Físico%20(2%20anos)%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária,%20opções%20de%20mídia%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     },
     {
       id: 'ecnpj_a1' as CertificateTemplateType,
@@ -215,6 +219,7 @@ export default function App() {
       duration: '1 Ano / 12 Meses',
       badge: 'Essencial PME',
       desc: 'Desenvolvido para emissão automatizada de NF-e, NFS-e e conexão de servidores de contabilidade na nuvem.',
+      needsMedia: false,
       features: [
         'Integração com ERPs e emissores na nuvem',
         'Outorga fácil para o seu contador de confiança',
@@ -226,20 +231,47 @@ export default function App() {
     },
     {
       id: 'ecnpj_a3' as CertificateTemplateType,
-      title: 'e-CNPJ A3 Físico',
-      price: '289,90',
-      duration: '3 Anos / 36 Meses',
+      title: 'e-CNPJ A3 Físico (1 Ano)',
+      price: '229,90',
+      duration: '1 Ano / 12 Meses',
       badge: 'Alta Estabilidade',
-      desc: 'Perfeito para empresas de médio/grande porte que exigem alto tempo de expiração e mídia rígida de proteção.',
+      desc: 'Perfeito para empresas que exigem mídia física de proteção. Certificado apenas — mídia física vendida à parte, com desconto ao combinar.',
+      needsMedia: true,
       features: [
-        'Válido por 36 meses consecutivos',
+        'Certificado gravado em Token USB ou Cartão',
+        'Válido por 1 ano inteiro',
         'Segurança criptográfica inviolável',
-        'Cartão rígido ou chaveiro Token USB robusto',
         'Ideal para assinatura de grandes contratos',
-        'Suporte prioritário na instalação em rede'
+        'Adicione Token ou Cartão/Leitora com 10% de desconto'
       ],
-      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CNPJ%20A3%20Físico%20da%20minha%20empresa%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária,%20opções%20de%20mídia%20(Token/Cartão)%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
+      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CNPJ%20A3%20Físico%20(1%20ano)%20da%20minha%20empresa%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária,%20opções%20de%20mídia%20(Token/Cartão)%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
+    },
+    {
+      id: 'ecnpj_a3' as CertificateTemplateType,
+      title: 'e-CNPJ A3 Físico (2 Anos)',
+      price: '289,90',
+      duration: '2 Anos / 24 Meses',
+      badge: 'Maior Validade',
+      desc: 'Mesma segurança do plano de 1 ano, com validade estendida para empresas de médio/grande porte. Certificado apenas — mídia física vendida à parte, com desconto ao combinar.',
+      needsMedia: true,
+      features: [
+        'Certificado gravado em Token USB ou Cartão',
+        'Válido por 2 anos inteiros',
+        'Segurança criptográfica inviolável',
+        'Ideal para assinatura de grandes contratos',
+        'Adicione Token ou Cartão/Leitora com 10% de desconto'
+      ],
+      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CNPJ%20A3%20Físico%20(2%20anos)%20da%20minha%20empresa%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária,%20opções%20de%20mídia%20(Token/Cartão)%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     }
+  ];
+
+  // Physical media, sold independently — customer picks any combination when
+  // paying for an A3 plan. Buying at least one alongside a certificate earns
+  // the 10% bundle discount (see PaymentModal).
+  const MEDIA_ADDONS = [
+    { id: 'token', name: 'Token USB', price: 149.90 },
+    { id: 'cartao', name: 'Cartão Inteligente', price: 99.90 },
+    { id: 'leitora', name: 'Leitora de Cartão', price: 179.90 },
   ];
 
   // Kept in sync with PRICING_PLANS so the "Preço Mínimo Garantido" stat
@@ -262,7 +294,7 @@ export default function App() {
     },
     {
       q: 'Qual a diferença técnica e prática entre os modelos A1 e A3?',
-      a: 'O modelo A1 é um arquivo de criptografia gerado diretamente no computador com validade de 12 meses. Facilita muito a cópia de segurança e automação em servidores de notas fiscais ERP. O modelo A3 é armazenado fisicamente em dispositivo seguro externo (Token USB ou Cartão) com validade estendida de 3 anos, o que inviabiliza que as chaves sejam clonadas ou copiadas fora do objeto físico.'
+      a: 'O modelo A1 é um arquivo de criptografia gerado diretamente no computador com validade de 12 meses. Facilita muito a cópia de segurança e automação em servidores de notas fiscais ERP. O modelo A3 é armazenado fisicamente em dispositivo seguro externo (Token USB ou Cartão + Leitora), disponível com validade de 1 ou 2 anos, o que inviabiliza que as chaves sejam clonadas ou copiadas fora do objeto físico.'
     },
     {
       q: 'Posso utilizar o Certificado CWB em outras cidades fora de Curitiba?',
@@ -640,7 +672,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredPlans.map((plan) => (
                     <div 
                       key={plan.id}
@@ -1112,6 +1144,8 @@ export default function App() {
         <PaymentModal
           planTitle={paymentPlan.title}
           planPrice={paymentPlan.price}
+          needsMedia={paymentPlan.needsMedia}
+          mediaAddons={MEDIA_ADDONS}
           onClose={() => setPaymentPlan(null)}
         />
       )}
