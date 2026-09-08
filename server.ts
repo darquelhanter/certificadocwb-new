@@ -74,7 +74,7 @@ async function start() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(__dirname, 'public');
+    const distPath = __dirname;
     app.use(express.static(distPath));
     app.get('*', (_req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));

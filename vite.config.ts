@@ -6,11 +6,6 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
-    build: {
-      // Keep the client bundle out of dist/'s root so server.cjs (served by
-      // express.static in production) never ends up publicly downloadable.
-      outDir: 'dist/public',
-    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
