@@ -3,6 +3,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import { submitLeadToEvolutionApi } from './api/_lib/evolutionApi';
+import { createAsaasCharge } from './api/_lib/asaas';
 
 dotenv.config();
 
@@ -24,6 +25,27 @@ const submitLeadLimiter = rateLimit({
 
 app.post('/api/submit-lead', submitLeadLimiter, async (req, res) => {
   const result = await submitLeadToEvolutionApi(req.body);
+  res.status(result.status).json(result.body);
+});
+
+const createPaymentLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Muitas solicitações. Tente novamente em alguns minutos.' },
+});
+
+app.post('/api/create-payment', createPaymentLimiter, async (req, res) => {
+  const { name, cpfCnpj, email, phone, value, description } = req.body || {};
+  const result = await createAsaasCharge({
+    name,
+    cpfCnpj,
+    email,
+    phone,
+    value: Number(value),
+    description,
+  });
   res.status(result.status).json(result.body);
 });
 

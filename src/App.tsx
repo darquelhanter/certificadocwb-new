@@ -32,6 +32,7 @@ import { CertificateData, CertificateTemplateType, LeadData, BlogPost, Submitted
 import { CertificateTemplate } from './components/CertificateTemplate';
 import { CertificateForm } from './components/CertificateForm';
 import { ValidateTab } from './components/ValidateTab';
+import { PaymentModal } from './components/PaymentModal';
 import { HistoryTab } from './components/HistoryTab';
 
 // Authentic mock blog articles
@@ -121,6 +122,7 @@ export default function App() {
   const [justGenerated, setJustGenerated] = useState<CertificateData | null>(null);
   const [selectedForPreview, setSelectedForPreview] = useState<CertificateData | null>(null);
   const [urlValidateCode, setUrlValidateCode] = useState<string | null>(null);
+  const [paymentPlan, setPaymentPlan] = useState<{ title: string; price: string } | null>(null);
 
   // Deep link from a scanned certificate QR code: ?validar=CWB-XXXXX-XXXX
   useEffect(() => {
@@ -259,7 +261,7 @@ export default function App() {
     {
       id: 'ecpf_a1' as CertificateTemplateType,
       title: 'e-CPF A1 Digital',
-      price: '119',
+      price: '139,90',
       duration: '1 Ano / 12 Meses',
       badge: 'Mais Recomendado',
       desc: 'Ideal para declaração de IRPF, acesso ao portal e-CAC, assinatura de contratos e prefeituras em Curitiba.',
@@ -271,6 +273,22 @@ export default function App() {
         'Pode ser feito cópia de segurança'
       ],
       whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CPF%20A1%20Digital%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
+    },
+    {
+      id: 'ecpf_a1' as CertificateTemplateType,
+      title: 'e-CPF A1 Digital (3 Meses)',
+      price: '108,90',
+      duration: '3 Meses',
+      badge: 'Mais Econômico',
+      desc: 'Ideal para uma necessidade pontual ou de curto prazo, sem o compromisso de um plano anual.',
+      features: [
+        'Instalação no computador ou navegador',
+        'Emissão 100% online por videoconferência',
+        'Suporte técnico especializado em Curitiba',
+        'Compatível com Windows, MacOS e Linux',
+        'Mesma validade jurídica do plano anual'
+      ],
+      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CPF%20A1%20Digital%20(3%20meses)%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     },
     {
       id: 'ecpf_a3' as CertificateTemplateType,
@@ -291,7 +309,7 @@ export default function App() {
     {
       id: 'ecnpj_a1' as CertificateTemplateType,
       title: 'e-CNPJ A1 Digital',
-      price: '179',
+      price: '149,90',
       duration: '1 Ano / 12 Meses',
       badge: 'Essencial PME',
       desc: 'Desenvolvido para emissão automatizada de NF-e, NFS-e e conexão de servidores de contabilidade na nuvem.',
@@ -307,7 +325,7 @@ export default function App() {
     {
       id: 'ecnpj_a3' as CertificateTemplateType,
       title: 'e-CNPJ A3 Físico',
-      price: '329',
+      price: '289,90',
       duration: '3 Anos / 36 Meses',
       badge: 'Alta Estabilidade',
       desc: 'Perfeito para empresas de médio/grande porte que exigem alto tempo de expiração e mídia rígida de proteção.',
@@ -321,6 +339,11 @@ export default function App() {
       whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CNPJ%20A3%20Físico%20da%20minha%20empresa%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária,%20opções%20de%20mídia%20(Token/Cartão)%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     }
   ];
+
+  // Kept in sync with PRICING_PLANS so the "Preço Mínimo Garantido" stat
+  // banner never drifts from the actual cheapest plan again.
+  const lowestPrice = Math.min(...PRICING_PLANS.map(p => parseFloat(p.price.replace(',', '.'))));
+  const lowestPriceFormatted = lowestPrice.toFixed(2).replace('.', ',');
 
   const FAQS = [
     {
@@ -500,7 +523,7 @@ export default function App() {
                     <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Validadores Oficiais</span>
                   </div>
                   <div>
-                    <span className="block text-2xl font-bold font-display text-slate-800">R$ 119,00</span>
+                    <span className="block text-2xl font-bold font-display text-slate-800">R$ {lowestPriceFormatted}</span>
                     <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Preço Mínimo Garantido</span>
                   </div>
                 </div>
@@ -723,7 +746,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                   {filteredPlans.map((plan) => (
                     <div 
                       key={plan.id}
@@ -764,7 +787,7 @@ export default function App() {
                         </ul>
                       </div>
 
-                      <div className="mt-6">
+                      <div className="mt-6 space-y-2">
                         <a
                           href={`${plan.whatsappLink}`}
                           target="_blank"
@@ -773,6 +796,13 @@ export default function App() {
                         >
                           Emitir por WhatsApp
                         </a>
+                        <button
+                          type="button"
+                          onClick={() => setPaymentPlan(plan)}
+                          className="w-full bg-white border border-slate-200 hover:border-indigo-600 hover:text-indigo-700 text-slate-600 text-center font-bold text-xs py-2.5 px-3 rounded-xl transition"
+                        >
+                          Pagar Agora
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -1215,6 +1245,14 @@ export default function App() {
         </footer>
 
       </div>
+
+      {paymentPlan && (
+        <PaymentModal
+          planTitle={paymentPlan.title}
+          planPrice={paymentPlan.price}
+          onClose={() => setPaymentPlan(null)}
+        />
+      )}
     </div>
   );
 }
