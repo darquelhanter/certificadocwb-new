@@ -28,10 +28,7 @@ import {
   BookOpen,
   Video
 } from 'lucide-react';
-import { CertificateData, CertificateTemplateType, LeadData, BlogPost, SubmittedLead } from './types';
-import { CertificateTemplate } from './components/CertificateTemplate';
-import { CertificateForm } from './components/CertificateForm';
-import { ValidateTab } from './components/ValidateTab';
+import { CertificateTemplateType, LeadData, BlogPost, SubmittedLead } from './types';
 import { PaymentModal } from './components/PaymentModal';
 import { HistoryTab } from './components/HistoryTab';
 
@@ -69,71 +66,14 @@ const BLOG_ARTICLES: BlogPost[] = [
   }
 ];
 
-// Curitiba local trust-based pre-populated certificates
-const INITIAL_DEMO_DATA: CertificateData[] = [
-  {
-    id: 'CWB-2526-X9A72',
-    holderName: 'Mercado Municipal de Curitiba Secos LTDA',
-    holderDoc: '12.345.678/0001-90',
-    certificateType: 'ecnpj_a1',
-    issuerName: 'Certificado CWB AC',
-    issueDate: '2026-05-10',
-    expiryDate: '2027-05-10',
-    serialNumber: 'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
-    status: 'active',
-  },
-  {
-    id: 'CWB-2526-Z3B45',
-    holderName: 'Gabriel Requião de Souza Silva',
-    holderDoc: '098.765.432-11',
-    certificateType: 'ecpf_a3',
-    issuerName: 'Certificado CWB AC',
-    issueDate: '2026-06-01',
-    expiryDate: '2029-06-01',
-    serialNumber: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c',
-    status: 'active',
-  },
-  {
-    id: 'CWB-2526-P8N11',
-    holderName: 'Paraná Inovações Tecnológicas S.A.',
-    holderDoc: '45.981.112/0001-20',
-    certificateType: 'ecnpj_a3',
-    issuerName: 'Certificado CWB AC',
-    issueDate: '2026-06-12',
-    expiryDate: '2029-06-12',
-    serialNumber: 'feedbabe-cafe-dead-beef-1234567890ab',
-    status: 'active',
-  }
-];
-
 export default function App() {
-  const [certificates, setCertificates] = useState<CertificateData[]>(() => {
-    const stored = localStorage.getItem('certificadocwb_records');
-    return stored ? JSON.parse(stored) : INITIAL_DEMO_DATA;
-  });
-
   const [submittedLeads, setSubmittedLeads] = useState<SubmittedLead[]>(() => {
     const stored = localStorage.getItem('certificadocwb_leads');
     return stored ? JSON.parse(stored) : [];
   });
 
-  const [activeTab, setActiveTab] = useState<'home' | 'validate' | 'blog' | 'history'>('home');
-  const [activeTemplate, setActiveTemplate] = useState<CertificateTemplateType>('ecpf_a1');
-  const [justGenerated, setJustGenerated] = useState<CertificateData | null>(null);
-  const [selectedForPreview, setSelectedForPreview] = useState<CertificateData | null>(null);
-  const [urlValidateCode, setUrlValidateCode] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'home' | 'blog' | 'history'>('home');
   const [paymentPlan, setPaymentPlan] = useState<{ title: string; price: string } | null>(null);
-
-  // Deep link from a scanned certificate QR code: ?validar=CWB-XXXXX-XXXX
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('validar');
-    if (code) {
-      setUrlValidateCode(code);
-      setActiveTab('validate');
-      window.history.replaceState({}, '', window.location.pathname);
-    }
-  }, []);
 
   // Lead feedback variables
   const [leadForm, setLeadForm] = useState<LeadData>({
@@ -155,46 +95,8 @@ export default function App() {
 
   // Sync state to localstorage
   useEffect(() => {
-    localStorage.setItem('certificadocwb_records', JSON.stringify(certificates));
-  }, [certificates]);
-
-  useEffect(() => {
     localStorage.setItem('certificadocwb_leads', JSON.stringify(submittedLeads));
   }, [submittedLeads]);
-
-  // Generate unique certificate key
-  const generateUniqueId = () => {
-    const year = new Date().getFullYear();
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let code = '';
-    for (let i = 0; i < 5; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return `CWB-${year}-${code}`;
-  };
-
-  const handleGenerateCertificate = (formData: Omit<CertificateData, 'id'>) => {
-    const id = generateUniqueId();
-    const newCert: CertificateData = {
-      ...formData,
-      id
-    };
-
-    setCertificates(prev => [newCert, ...prev]);
-    setJustGenerated(newCert);
-    setSelectedForPreview(newCert);
-    setActiveTab('validate'); // Bring them to visual validator to appreciate the card!
-  };
-
-  const handleDeleteCertificate = (id: string) => {
-    setCertificates(prev => prev.filter(c => c.id !== id));
-    if (selectedForPreview?.id === id) {
-      setSelectedForPreview(null);
-    }
-    if (justGenerated?.id === id) {
-      setJustGenerated(null);
-    }
-  };
 
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -397,20 +299,12 @@ export default function App() {
             {/* Desktop Navigation menus */}
             <nav className="flex flex-wrap items-center justify-center gap-1.5 p-1 bg-slate-900 border border-slate-800 rounded-xl">
               <button
-                onClick={() => { setActiveTab('home'); setJustGenerated(null); }}
+                onClick={() => { setActiveTab('home'); }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
                   activeTab === 'home' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:text-white hover:bg-slate-800'
                 }`}
               >
                 Início
-              </button>
-              <button
-                onClick={() => { setActiveTab('validate'); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-                  activeTab === 'validate' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:text-white hover:bg-slate-800'
-                }`}
-              >
-                Validar ICP
               </button>
               <button
                 onClick={() => { setActiveTab('blog'); }}
@@ -426,7 +320,7 @@ export default function App() {
                   activeTab === 'history' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:text-white hover:bg-slate-800'
                 }`}
               >
-                Registros ({certificates.length})
+                Leads ({submittedLeads.length})
               </button>
             </nav>
 
@@ -925,7 +819,7 @@ export default function App() {
                     O que dizem os contadores e empresários em Curitiba
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-                    Centenas de clientes utilizam a nossa plataforma de validador local de certificados digitais.
+                    Centenas de clientes já emitiram seus certificados digitais com a Certificado CWB.
                   </p>
                 </div>
 
@@ -933,7 +827,7 @@ export default function App() {
                   {[
                     { text: 'A videoconferência com o agente da Certificado CWB durou menos de 5 minutos e no mesmo instante recebi o arquivo para instalação do e-CPF A1 do meu cliente. Como contadora, indico de olhos fechados!', name: 'Alessandra de Souza', role: 'Sócia-Contadora', company: 'CWB Contabilidade & Fisco' },
                     { text: 'Precisava de um e-CNPJ com urgência para emitir notas fiscais em lote no sábado de manhã. Fui atendido de imediato pelas chaves digitais online e meu faturamento não parou de rodar. Show de bola.', name: 'Roberto Castilho', role: 'Fundador / Dev', company: 'Sul Sistemas e-Commerce' },
-                    { text: 'Sempre utilizo o validador ICP-Brasil deles para comprovar as assinaturas dos meus contratos imobiliários em nosso escritório de advocacia. Excelente agilidade e visual incrível das chaves.', name: 'Mariana Requião', role: 'Advogada Licenciada', company: 'Requião Advocacia Integrada' }
+                    { text: 'Meu e-CPF A3 chegou fisicamente rápido e o suporte me ajudou em toda a instalação do token para assinar contratos imobiliários em nosso escritório de advocacia. Excelente agilidade.', name: 'Mariana Requião', role: 'Advogada Licenciada', company: 'Requião Advocacia Integrada' }
                   ].map((t, i) => (
                     <div key={i} className="bg-white p-6 rounded-2xl border border-slate-100 space-y-4 shadow-sm hover:translate-y-[-2px] transition-transform">
                       <div className="flex items-center space-x-1.5 text-amber-500">
@@ -1008,24 +902,6 @@ export default function App() {
                   <span>● SERPRO HOMOLOGADO</span>
                 </div>
               </section>
-            </motion.div>
-          )}
-
-          {/* LOOKUP VALIDATOR TAB */}
-          {activeTab === 'validate' && (
-            <motion.div
-              key="validate"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              className="max-w-7xl mx-auto px-4 py-8"
-            >
-              <ValidateTab
-                certificates={certificates}
-                initialSelected={selectedForPreview}
-                initialCode={urlValidateCode}
-                onClearSelection={() => setSelectedForPreview(null)}
-              />
             </motion.div>
           )}
 
@@ -1143,19 +1019,6 @@ export default function App() {
               className="max-w-7xl mx-auto px-4 py-8"
             >
               <HistoryTab
-                certificates={certificates}
-                onSelect={(cert) => {
-                  setSelectedForPreview(cert);
-                  setActiveTab('validate');
-                }}
-                onDelete={handleDeleteCertificate}
-                onGoToCreate={() => {
-                  setActiveTab('home');
-                  setTimeout(() => {
-                    const priceNode = document.getElementById('pricing-anchored');
-                    priceNode?.scrollIntoView({ behavior: 'smooth' });
-                  }, 150);
-                }}
                 submittedLeads={submittedLeads}
                 onUpdateLeadStatus={handleUpdateLeadStatus}
                 onDeleteLead={handleDeleteLead}
@@ -1189,7 +1052,6 @@ export default function App() {
                   <span className="block text-slate-500 font-bold uppercase tracking-wider text-[10px]">Portal</span>
                   <ul className="space-y-1.5 text-slate-400">
                     <li><button onClick={() => setActiveTab('home')} className="hover:text-white">Início</button></li>
-                    <li><button onClick={() => setActiveTab('validate')} className="hover:text-white">Validar Chaves</button></li>
                   </ul>
                 </div>
                 <div className="space-y-2">
