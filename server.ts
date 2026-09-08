@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
-import { submitLeadToEvolutionApi } from './lib/evolutionApi';
+import { submitLeadToEvolutionApi } from './api/_lib/evolutionApi';
 
 dotenv.config();
 
