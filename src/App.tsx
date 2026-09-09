@@ -370,7 +370,7 @@ export default function App() {
               className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5 transition-all select-none"
             >
               <Phone className="w-4 h-4" />
-              <span>Emitir no WhatsApp</span>
+              <span>Iniciar Atendimento Online</span>
             </a>
           </div>
         </header>
