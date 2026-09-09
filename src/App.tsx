@@ -26,11 +26,24 @@ import {
   ArrowRight,
   ThumbsUp,
   BookOpen,
-  Video
+  Video,
+  Instagram
 } from 'lucide-react';
 import { CertificateTemplateType, LeadData, BlogPost, SubmittedLead } from './types';
 import { PaymentModal } from './components/PaymentModal';
 import { HistoryTab } from './components/HistoryTab';
+
+declare global {
+  interface Window {
+    fbq?: (...args: any[]) => void;
+  }
+}
+
+// Fires a Meta Pixel conversion event (Lead, InitiateCheckout, etc). No-op if
+// the pixel script (index.html) hasn't loaded yet or is blocked.
+const trackPixelEvent = (event: string) => {
+  window.fbq?.('track', event);
+};
 
 // Authentic mock blog articles
 const BLOG_ARTICLES: BlogPost[] = [
@@ -113,6 +126,7 @@ export default function App() {
 
     // Always keep the lead in the local CRM, even if the webhook notification fails below
     setSubmittedLeads(prev => [newLead, ...prev]);
+    trackPixelEvent('Lead');
 
     const rawPhone = leadForm.phone.replace(/\D/g, '');
     // Brazilian local numbers are 10-11 digits (DDD + number); anything longer
@@ -738,7 +752,7 @@ export default function App() {
                         </a>
                         <button
                           type="button"
-                          onClick={() => setPaymentPlan(plan)}
+                          onClick={() => { trackPixelEvent('InitiateCheckout'); setPaymentPlan(plan); }}
                           className={`w-full text-center font-bold text-xs py-2.5 px-3 rounded-xl transition ${
                             plan.featured
                               ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 border border-indigo-600'
@@ -1133,6 +1147,12 @@ export default function App() {
                   <li className="flex items-center space-x-2 justify-center md:justify-start">
                     <MapPin className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span>Curitiba, Paraná — Brasil</span>
+                  </li>
+                  <li className="flex items-center space-x-2 justify-center md:justify-start">
+                    <Instagram className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <a href="https://www.instagram.com/cwbcertificadodigital" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                      @cwbcertificadodigital
+                    </a>
                   </li>
                 </ul>
               </div>
