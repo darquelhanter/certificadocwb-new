@@ -734,7 +734,7 @@ export default function App() {
                           referrerPolicy="no-referrer"
                           className="w-full bg-slate-900 group-hover:bg-indigo-600 text-white text-center font-bold text-xs py-2.5 px-3 rounded-xl shadow-md hover:shadow-indigo-600/10 block leading-tight transition"
                         >
-                          Emitir por WhatsApp
+                          Iniciar Atendimento Online
                         </a>
                         <button
                           type="button"
@@ -745,7 +745,7 @@ export default function App() {
                               : 'bg-white border border-slate-200 hover:border-indigo-600 hover:text-indigo-700 text-slate-600'
                           }`}
                         >
-                          Pagar Agora
+                          Solicitar Meu Certificado
                         </button>
                       </div>
                     </div>
