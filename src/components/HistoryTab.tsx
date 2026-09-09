@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { Search, Phone, Trash2, Zap, Loader2 } from 'lucide-react';
 import { SubmittedLead } from '../types';
 
+const INTEREST_LABELS: Record<string, string> = {
+  general: 'Assuntos Gerais',
+  ecpf_a1: 'e-CPF A1',
+  ecpf_a3: 'e-CPF A3',
+  ecnpj_a1: 'e-CNPJ A1',
+  ecnpj_a3: 'e-CNPJ A3',
+};
+
 interface HistoryTabProps {
   submittedLeads: SubmittedLead[];
   onUpdateLeadStatus: (id: string, status: 'pending' | 'contacted' | 'completed') => void;
@@ -179,7 +187,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
                         lead.interestType === 'ecnpj_a3' ? 'bg-amber-50 text-amber-700 border-amber-200' :
                         'bg-slate-50 text-slate-700 border-slate-200'
                       }`}>
-                        {lead.interestType === 'general' ? 'Assuntos Gerais' : lead.interestType.replace('_', ' ')}
+                        {INTEREST_LABELS[lead.interestType] || lead.interestType}
                       </span>
                     </td>
 
