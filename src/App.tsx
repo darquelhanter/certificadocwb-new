@@ -162,11 +162,30 @@ export default function App() {
   // (Token/Cartão/Leitora) are sold separately below and bundled at checkout.
   const PRICING_PLANS = [
     {
+      id: 'ecnpj_a1' as CertificateTemplateType,
+      title: 'e-CNPJ A1 Digital',
+      price: '149,90',
+      duration: '1 Ano / 12 Meses',
+      badge: '⭐ Mais Vendido',
+      featured: true,
+      desc: 'Desenvolvido para emissão automatizada de NF-e, NFS-e e conexão de servidores de contabilidade na nuvem.',
+      needsMedia: false,
+      features: [
+        'Integração com ERPs e emissores na nuvem',
+        'Outorga fácil para o seu contador de confiança',
+        'Acesso irrestrito ao Conectividade Social',
+        'Emissão rápida por videochamada do celular',
+        'Atendimento prioritário humanizado'
+      ],
+      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CNPJ%20A1%20Digital%20da%20minha%20empresa%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20os%20documentos%20exigidos%20e%20as%20etapas%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
+    },
+    {
       id: 'ecpf_a1' as CertificateTemplateType,
       title: 'e-CPF A1 Digital',
       price: '99,90',
       duration: '1 Ano / 12 Meses',
-      badge: 'Mais Recomendado',
+      badge: 'Mais Econômico',
+      featured: false,
       desc: 'Ideal para declaração de IRPF, acesso ao portal e-CAC, assinatura de contratos e prefeituras em Curitiba.',
       needsMedia: false,
       features: [
@@ -184,6 +203,7 @@ export default function App() {
       price: '159,90',
       duration: '1 Ano / 12 Meses',
       badge: 'Máxima Segurança',
+      featured: false,
       desc: 'Perfeito para advogados credenciados no Projudi, médicos credenciados e profissionais liberais. Certificado apenas — mídia física (Token ou Cartão + Leitora) vendida à parte, com desconto ao combinar.',
       needsMedia: true,
       features: [
@@ -201,6 +221,7 @@ export default function App() {
       price: '199,90',
       duration: '2 Anos / 24 Meses',
       badge: 'Maior Validade',
+      featured: false,
       desc: 'Mesma segurança do plano de 1 ano, com validade estendida para quem não quer renovar tão cedo. Certificado apenas — mídia física vendida à parte, com desconto ao combinar.',
       needsMedia: true,
       features: [
@@ -213,28 +234,12 @@ export default function App() {
       whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CPF%20A3%20Físico%20(2%20anos)%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20a%20documentação%20necessária,%20opções%20de%20mídia%20e%20o%20processo%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
     },
     {
-      id: 'ecnpj_a1' as CertificateTemplateType,
-      title: 'e-CNPJ A1 Digital',
-      price: '149,90',
-      duration: '1 Ano / 12 Meses',
-      badge: 'Essencial PME',
-      desc: 'Desenvolvido para emissão automatizada de NF-e, NFS-e e conexão de servidores de contabilidade na nuvem.',
-      needsMedia: false,
-      features: [
-        'Integração com ERPs e emissores na nuvem',
-        'Outorga fácil para o seu contador de confiança',
-        'Acesso irrestrito ao Conectividade Social',
-        'Emissão rápida por videochamada do celular',
-        'Atendimento prioritário humanizado'
-      ],
-      whatsappLink: 'https://wa.me/5541992447846?text=Olá!%20Tenho%20interesse%20em%20emitir%20o%20certificado%20e-CNPJ%20A1%20Digital%20da%20minha%20empresa%20pelo%20site%20certificadocwb.com.br.%20Gostaria%20de%20receber%20orientações%20sobre%20os%20documentos%20exigidos%20e%20as%20etapas%20de%20emissão.%20Aguardo%20seu%20retorno.%20Obrigado!'
-    },
-    {
       id: 'ecnpj_a3' as CertificateTemplateType,
       title: 'e-CNPJ A3 Físico (1 Ano)',
       price: '229,90',
       duration: '1 Ano / 12 Meses',
       badge: 'Alta Estabilidade',
+      featured: false,
       desc: 'Perfeito para empresas que exigem mídia física de proteção. Certificado apenas — mídia física vendida à parte, com desconto ao combinar.',
       needsMedia: true,
       features: [
@@ -252,6 +257,7 @@ export default function App() {
       price: '289,90',
       duration: '2 Anos / 24 Meses',
       badge: 'Maior Validade',
+      featured: false,
       desc: 'Mesma segurança do plano de 1 ano, com validade estendida para empresas de médio/grande porte. Certificado apenas — mídia física vendida à parte, com desconto ao combinar.',
       needsMedia: true,
       features: [
@@ -674,14 +680,22 @@ export default function App() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredPlans.map((plan) => (
-                    <div 
-                      key={plan.id}
-                      className="bg-white rounded-3xl border border-slate-150 p-6 flex flex-col justify-between hover:shadow-lg hover:border-slate-300 transition-all relative overflow-hidden group"
+                    <div
+                      key={plan.title}
+                      className={`bg-white rounded-3xl p-6 flex flex-col justify-between transition-all relative overflow-hidden group ${
+                        plan.featured
+                          ? 'border-2 border-indigo-600 shadow-xl shadow-indigo-600/10 md:-translate-y-2 ring-4 ring-indigo-600/10'
+                          : 'border border-slate-150 hover:shadow-lg hover:border-slate-300'
+                      }`}
                     >
                       {/* Top ribbon if recommended */}
                       {plan.badge && (
                         <div className="absolute top-3 right-3">
-                          <span className="text-[9px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-600 border border-indigo-200/40 px-2 py-0.5 rounded-full">
+                          <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                            plan.featured
+                              ? 'bg-indigo-600 text-white border border-indigo-600 shadow-sm'
+                              : 'bg-indigo-50 text-indigo-600 border border-indigo-200/40'
+                          }`}>
                             {plan.badge}
                           </span>
                         </div>
@@ -725,7 +739,11 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => setPaymentPlan(plan)}
-                          className="w-full bg-white border border-slate-200 hover:border-indigo-600 hover:text-indigo-700 text-slate-600 text-center font-bold text-xs py-2.5 px-3 rounded-xl transition"
+                          className={`w-full text-center font-bold text-xs py-2.5 px-3 rounded-xl transition ${
+                            plan.featured
+                              ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 border border-indigo-600'
+                              : 'bg-white border border-slate-200 hover:border-indigo-600 hover:text-indigo-700 text-slate-600'
+                          }`}
                         >
                           Pagar Agora
                         </button>
