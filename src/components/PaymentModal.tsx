@@ -82,7 +82,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
           cpfCnpj: cleanDoc,
           email: email || undefined,
           value: Math.round(total * 100) / 100,
-          description: `${itemsDesc}${chosenAddons.length ? ` (10% off combo)` : ''} - Certificado CWB`,
+          description: `${itemsDesc}${chosenAddons.length ? ` (10% de desconto no combo)` : ''} - Certificado CWB`,
         }),
       });
 
@@ -159,7 +159,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
 
           {needsMedia && (
             <div className="space-y-1.5 pt-1">
-              <label className="text-[10px] font-bold text-slate-400 block uppercase">Adicionar Mídia Física (opcional, 10% off no combo)</label>
+              <label className="text-[10px] font-bold text-slate-400 block uppercase">Adicionar Mídia Física (opcional, 10% de desconto no combo)</label>
               <div className="space-y-1.5">
                 {mediaAddons.map(addon => (
                   <label

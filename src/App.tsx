@@ -288,7 +288,7 @@ export default function App() {
   const FAQS = [
     {
       q: 'O que é um Certificado Digital e-CPF e e-CNPJ?',
-      a: 'O Certificado Digital funciona como a sua carteira de identidade jurídica e eletrônica no ambiente web. Ele garante autenticidade jurídica absoluta e segurança de criptografia criptográfica, permitindo realizar transações fiscais perante a Receita Federal, assinar contratos sem cartório civil e faturar notas fiscais com total amparo regulamentar no Brasil.'
+      a: 'O Certificado Digital funciona como a sua carteira de identidade jurídica e eletrônica no ambiente web. Ele garante autenticidade jurídica absoluta e segurança criptográfica, permitindo realizar transações fiscais perante a Receita Federal, assinar contratos sem cartório civil e faturar notas fiscais com total amparo regulamentar no Brasil.'
     },
     {
       q: 'Como funciona a validação 100% online por videoconferência?',
@@ -598,7 +598,7 @@ export default function App() {
                     <div className="md:col-span-9 space-y-4">
                       <h4 className="text-base font-bold text-slate-800 flex items-center space-x-2">
                         <span className="w-2 h-2 rounded-full bg-indigo-600 inline-block" />
-                        <span>Requisitos e Passo a Passo da Vídeo</span>
+                        <span>Requisitos e Passo a Passo do Vídeo</span>
                       </h4>
                       
                       <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -607,7 +607,7 @@ export default function App() {
                         </p>
                         
                         <div className="space-y-2 pt-1 border-t border-slate-100">
-                          <h5 className="font-bold text-slate-800 text-xs uppercase tracking-wide">Como é o processo da video? É bem simples:</h5>
+                          <h5 className="font-bold text-slate-800 text-xs uppercase tracking-wide">Como é o processo do vídeo? É bem simples:</h5>
                           <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-1 text-[11px] text-slate-500">
                             <li className="flex items-start space-x-2">
                               <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">1</span>
@@ -619,7 +619,7 @@ export default function App() {
                             </li>
                             <li className="flex items-start space-x-2">
                               <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">3</span>
-                              <span>Na video, nosso atendente faz algumas simples perguntas obrigatórias.</span>
+                              <span>No vídeo, nosso atendente faz algumas simples perguntas obrigatórias.</span>
                             </li>
                             <li className="flex items-start space-x-2">
                               <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">4</span>
@@ -646,7 +646,7 @@ export default function App() {
                     Escolha a melhor opção para você ou sua empresa
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-                    Sem letras miúdas. Sem surpresas ou taxas recorrentes ocultas. Apenas o melhor valor mercadológico de Curitiba.
+                    Sem letras miúdas. Sem surpresas ou taxas ocultas. Apenas o melhor custo-benefício de Curitiba.
                   </p>
 
                   {/* Filter switches */}
@@ -1108,7 +1108,7 @@ export default function App() {
                   <span className="block text-slate-500 font-bold uppercase tracking-wider text-[10px]">Novidades</span>
                   <ul className="space-y-1.5 text-slate-400">
                     <li><button onClick={() => setActiveTab('blog')} className="hover:text-white">Blog de Ajuda</button></li>
-                    <li><button onClick={() => setActiveTab('history')} className="hover:text-white">Historial de Logs</button></li>
+                    <li><button onClick={() => setActiveTab('history')} className="hover:text-white">Painel de Leads</button></li>
                     <li><a href="https://wa.me/5541992447846" target="_blank" rel="noreferrer" className="hover:text-white">Atendimento</a></li>
                   </ul>
                 </div>
