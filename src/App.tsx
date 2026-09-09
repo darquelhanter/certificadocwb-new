@@ -164,7 +164,7 @@ export default function App() {
     {
       id: 'ecpf_a1' as CertificateTemplateType,
       title: 'e-CPF A1 Digital',
-      price: '139,90',
+      price: '99,90',
       duration: '1 Ano / 12 Meses',
       badge: 'Mais Recomendado',
       desc: 'Ideal para declaração de IRPF, acesso ao portal e-CAC, assinatura de contratos e prefeituras em Curitiba.',
