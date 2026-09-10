@@ -392,15 +392,15 @@ export default function App() {
                 <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
                   <div className="space-y-6">
                     <div className="inline-flex items-center space-x-2 px-3 py-1 bg-indigo-500/10 text-indigo-300 rounded-full border border-indigo-500/20 text-xs font-semibold">
-                      <span>Validação Digital com Cobertura e Validade em todo o Brasil</span>
+                      <span>Emissão 100% Online por Videoconferência</span>
                     </div>
                     
                     <h2 className="text-3xl sm:text-5xl font-display font-extrabold tracking-tight leading-none text-white">
-                      Seu Certificado Digital em <span className="text-indigo-400 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-indigo-300 to-indigo-200">Minutos</span>
+                      Certificado Digital com Validade Jurídica em <span className="text-indigo-400 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-indigo-300 to-indigo-200">Todo o Brasil</span>
                     </h2>
 
                     <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                      Emissão simplificada de e-CPF e e-CNPJ por videoconferência com segurança e validade jurídica em todo o território nacional. Tenha o seu certificado emitido e pronto de forma rápida, de onde você estiver.
+                      e-CPF e e-CNPJ emitidos por videoconferência segura, homologada pela ICP-Brasil. Rápido, oficial e sem sair de casa.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
