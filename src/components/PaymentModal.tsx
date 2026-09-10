@@ -43,6 +43,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
   const [name, setName] = useState('');
   const [cpfCnpj, setCpfCnpj] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -71,6 +72,12 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
       return;
     }
 
+    const cleanPhone = phone.replace(/\D/g, '');
+    if (cleanPhone.length < 10) {
+      setError('Informe um número de WhatsApp válido, com DDD.');
+      return;
+    }
+
     setSubmitting(true);
     try {
       const itemsDesc = [planTitle, ...chosenAddons.map(a => a.name)].join(' + ');
@@ -80,7 +87,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
         body: JSON.stringify({
           name,
           cpfCnpj: cleanDoc,
-          email: email || undefined,
+          email,
+          phone: cleanPhone,
           value: Math.round(total * 100) / 100,
           description: `${itemsDesc}${chosenAddons.length ? ` (10% de desconto no combo)` : ''} - Certificado CWB`,
         }),
@@ -146,15 +154,30 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="pay-email">E-mail (opcional)</label>
-            <input
-              id="pay-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-sm"
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="pay-email">E-mail</label>
+              <input
+                id="pay-email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-sm"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="pay-phone">WhatsApp</label>
+              <input
+                id="pay-phone"
+                type="tel"
+                required
+                placeholder="(41) 99244-7846"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-sm font-mono"
+              />
+            </div>
           </div>
 
           {needsMedia && (
