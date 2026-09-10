@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Search, Phone, Trash2, Zap, Loader2, LogOut } from 'lucide-react';
+import { Search, Phone, Trash2, Zap, Loader2, LogOut, Eye, Users } from 'lucide-react';
 import { SubmittedLead } from '../types';
+
+interface PageViewStats {
+  totalViews: number;
+  uniqueVisitors: number;
+  todayViews: number;
+  todayUniqueVisitors: number;
+  last7DaysViews: number;
+  last7DaysUniqueVisitors: number;
+}
 
 const INTEREST_LABELS: Record<string, string> = {
   general: 'Assuntos Gerais',
@@ -23,6 +32,28 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ adminPassword, onLogout 
 
   const [testingWebhook, setTestingWebhook] = useState(false);
   const [webhookTestResult, setWebhookTestResult] = useState<{ ok: boolean; message: string } | null>(null);
+
+  const [viewStats, setViewStats] = useState<PageViewStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  const fetchViewStats = async () => {
+    setStatsLoading(true);
+    try {
+      const response = await fetch('/api/stats/pageviews', {
+        headers: { 'x-admin-password': adminPassword },
+      });
+      if (response.status === 401) {
+        onLogout();
+        return;
+      }
+      const data = await response.json();
+      if (response.ok) setViewStats(data);
+    } catch (err) {
+      console.error('Falha ao carregar estatísticas de visualizações:', err);
+    } finally {
+      setStatsLoading(false);
+    }
+  };
 
   const fetchLeads = async () => {
     setLoading(true);
@@ -49,6 +80,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ adminPassword, onLogout 
 
   useEffect(() => {
     fetchLeads();
+    fetchViewStats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -154,6 +186,28 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ adminPassword, onLogout 
             <LogOut className="w-4 h-4" />
           </button>
         </div>
+      </div>
+
+      {/* VISITOR / PAGEVIEW STATS */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { label: 'Visualizações Hoje', value: viewStats?.todayViews, icon: Eye },
+          { label: 'Visitantes Únicos Hoje', value: viewStats?.todayUniqueVisitors, icon: Users },
+          { label: 'Visualizações (7 dias)', value: viewStats?.last7DaysViews, icon: Eye },
+          { label: 'Total de Visualizações', value: viewStats?.totalViews, icon: Eye },
+        ].map(({ label, value, icon: Icon }) => (
+          <div key={label} className="bg-slate-50 rounded-xl border border-slate-150 p-3.5 flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-indigo-50 text-indigo-600 shrink-0">
+              <Icon className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] text-slate-400 font-semibold truncate">{label}</p>
+              <p className="text-lg font-display font-bold text-slate-800 leading-tight">
+                {statsLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-300" /> : (value ?? 0)}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* WHATSAPP INTEGRATION TEST PANEL */}

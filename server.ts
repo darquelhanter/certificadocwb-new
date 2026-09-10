@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import { submitLeadToEvolutionApi, sendWhatsAppText } from './api/_lib/evolutionApi';
 import { createAsaasCharge } from './api/_lib/asaas';
-import { insertLead, listLeads, updateLeadStatus, deleteLead, getConversationHistory, appendConversationMessage, getLastAssistantMessage, pausePhone, isPhonePaused } from './api/_lib/db';
+import { insertLead, listLeads, updateLeadStatus, deleteLead, getConversationHistory, appendConversationMessage, getLastAssistantMessage, pausePhone, isPhonePaused, insertPageView, getPageViewStats } from './api/_lib/db';
 import { isAuthorized } from './api/_lib/adminAuth';
 import { notifyPaymentConfirmed } from './api/_lib/postPaymentNotify';
 import { askSupportBot } from './api/_lib/supportBot';
@@ -95,6 +95,30 @@ app.post('/api/leads/delete', async (req, res) => {
   } catch (err) {
     console.error('Falha ao remover lead:', err);
     res.status(500).json({ error: 'Falha ao remover o lead.' });
+  }
+});
+
+app.post('/api/track-pageview', async (req, res) => {
+  const { visitorId } = req.body || {};
+  try {
+    await insertPageView(typeof visitorId === 'string' ? visitorId.slice(0, 64) : null);
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Falha ao registrar visualização de página:', err);
+    res.status(200).json({ success: false });
+  }
+});
+
+app.get('/api/stats/pageviews', async (req, res) => {
+  if (!isAuthorized(req.headers['x-admin-password'])) {
+    return res.status(401).json({ error: 'Senha incorreta.' });
+  }
+  try {
+    const stats = await getPageViewStats();
+    res.status(200).json(stats);
+  } catch (err) {
+    console.error('Falha ao buscar estatísticas de visualizações:', err);
+    res.status(500).json({ error: 'Falha ao buscar estatísticas no banco de dados.' });
   }
 });
 

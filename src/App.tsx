@@ -103,6 +103,27 @@ export default function App() {
   // FAQ Expand tracker
   const [expandedFaqIndex, setExpandedFaqIndex] = useState<number | null>(null);
 
+  // Anonymous pageview counter for the admin panel — one random id per
+  // browser (persisted in localStorage) lets us tell total views apart from
+  // unique visitors without any real tracking/cookies.
+  useEffect(() => {
+    try {
+      let visitorId = localStorage.getItem('cwb_visitor_id');
+      if (!visitorId) {
+        visitorId = crypto.randomUUID();
+        localStorage.setItem('cwb_visitor_id', visitorId);
+      }
+      fetch('/api/track-pageview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorId }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch {
+      // localStorage indisponível (modo privado, etc.) — segue sem contar.
+    }
+  }, []);
+
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLeadError(null);

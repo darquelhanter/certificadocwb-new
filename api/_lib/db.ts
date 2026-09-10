@@ -50,6 +50,14 @@ async function ensureTable() {
       paused_until TIMESTAMPTZ NOT NULL
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS page_views (
+      id BIGSERIAL PRIMARY KEY,
+      visitor_id TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS page_views_created_at_idx ON page_views (created_at)`;
   tableEnsured = true;
 }
 
@@ -172,4 +180,43 @@ export async function isPhonePaused(phone: string): Promise<boolean> {
   const sql = getSql();
   const rows = await sql`SELECT 1 FROM whatsapp_pauses WHERE phone = ${phone} AND paused_until > now()`;
   return (rows as any[]).length > 0;
+}
+
+export async function insertPageView(visitorId: string | null): Promise<void> {
+  await ensureTable();
+  const sql = getSql();
+  await sql`INSERT INTO page_views (visitor_id) VALUES (${visitorId})`;
+}
+
+export interface PageViewStats {
+  totalViews: number;
+  uniqueVisitors: number;
+  todayViews: number;
+  todayUniqueVisitors: number;
+  last7DaysViews: number;
+  last7DaysUniqueVisitors: number;
+}
+
+export async function getPageViewStats(): Promise<PageViewStats> {
+  await ensureTable();
+  const sql = getSql();
+  const rows = await sql`
+    SELECT
+      COUNT(*)::int AS total_views,
+      COUNT(DISTINCT visitor_id)::int AS unique_visitors,
+      COUNT(*) FILTER (WHERE created_at >= date_trunc('day', now()))::int AS today_views,
+      COUNT(DISTINCT visitor_id) FILTER (WHERE created_at >= date_trunc('day', now()))::int AS today_unique_visitors,
+      COUNT(*) FILTER (WHERE created_at >= now() - interval '7 days')::int AS last7_views,
+      COUNT(DISTINCT visitor_id) FILTER (WHERE created_at >= now() - interval '7 days')::int AS last7_unique_visitors
+    FROM page_views
+  `;
+  const r = (rows as any[])[0] || {};
+  return {
+    totalViews: r.total_views || 0,
+    uniqueVisitors: r.unique_visitors || 0,
+    todayViews: r.today_views || 0,
+    todayUniqueVisitors: r.today_unique_visitors || 0,
+    last7DaysViews: r.last7_views || 0,
+    last7DaysUniqueVisitors: r.last7_unique_visitors || 0,
+  };
 }
