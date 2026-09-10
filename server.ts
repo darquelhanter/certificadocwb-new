@@ -4,13 +4,14 @@ import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import { submitLeadToEvolutionApi, sendWhatsAppText } from './api/_lib/evolutionApi';
 import { createAsaasCharge } from './api/_lib/asaas';
-import { insertLead, listLeads, updateLeadStatus, deleteLead, getConversationHistory, appendConversationMessage } from './api/_lib/db';
+import { insertLead, listLeads, updateLeadStatus, deleteLead, getConversationHistory, appendConversationMessage, getLastAssistantMessage, pausePhone, isPhonePaused } from './api/_lib/db';
 import { isAuthorized } from './api/_lib/adminAuth';
 import { notifyPaymentConfirmed } from './api/_lib/postPaymentNotify';
 import { askSupportBot } from './api/_lib/supportBot';
 
 const ADMIN_NOTIFICATION_NUMBER = '5541992447846';
 const ADMIN_NOTIFICATION_EMAIL = 'cwbcertificado@gmail.com';
+const HUMAN_TAKEOVER_PAUSE_HOURS = 24;
 
 dotenv.config();
 
@@ -170,18 +171,30 @@ app.post('/api/whatsapp-webhook', async (req, res) => {
   const remoteJid: string | undefined = data?.key?.remoteJid;
   const fromMe: boolean = Boolean(data?.key?.fromMe);
 
-  if (!remoteJid || fromMe || remoteJid.endsWith('@g.us')) {
+  if (!remoteJid || remoteJid.endsWith('@g.us')) {
     return res.status(200).json({ ignored: true });
   }
 
+  const phone = remoteJid.split('@')[0];
   const text = extractMessageText(data?.message);
   if (!text) {
     return res.status(200).json({ ignored: true });
   }
 
-  const phone = remoteJid.split('@')[0];
-
   try {
+    if (fromMe) {
+      const lastAssistantMessage = await getLastAssistantMessage(phone);
+      if (lastAssistantMessage !== null && lastAssistantMessage.trim() === text.trim()) {
+        return res.status(200).json({ ignored: true, reason: 'bot echo' });
+      }
+      await pausePhone(phone, HUMAN_TAKEOVER_PAUSE_HOURS);
+      return res.status(200).json({ ignored: true, reason: 'human takeover' });
+    }
+
+    if (await isPhonePaused(phone)) {
+      return res.status(200).json({ ignored: true, reason: 'paused' });
+    }
+
     await appendConversationMessage(phone, 'user', text);
     const history = await getConversationHistory(phone);
     const { reply, needsHuman } = await askSupportBot(history);

@@ -34,8 +34,8 @@ Diferença A1 x A3: A1 é um arquivo digital instalado no computador, validade d
 4. O certificado é emitido e enviado logo após a validação.
 
 ## Documentos exigidos
-- Pessoa Física (e-CPF): documento de identificação com foto (CNH, RG, ou carteira de classe como OAB/CRM).
-- Pessoa Jurídica (e-CNPJ): documento de constituição da empresa (Contrato Social consolidado, CCMEI ou Requerimento de Empresário) + documento de identificação com foto do representante legal.
+- Pessoa Física (e-CPF): documento de identificação com foto (CNH, RG ou carteira de classe como OAB/CRM), telefone, e-mail e endereço.
+- Pessoa Jurídica (e-CNPJ): documento de identificação do representante legal, Cartão CNPJ, Contrato Social em vigor (devidamente registrado em órgão competente), e-mail e telefone do titular.
 
 ## Critério de elegibilidade para a videoconferência
 O cliente precisa ter CNH válida OU já ter feito um certificado digital anteriormente (biometria já cadastrada na Justiça Eleitoral / ICP-Brasil).
@@ -55,10 +55,26 @@ Site: certificadocwb.com.br
 - Nunca prometa descontos além dos 10% de combo de mídia já descritos.
 - Nunca finja ser uma pessoa; se perguntarem, diga que é um assistente virtual da Certificado CWB.
 
-Responda APENAS em JSON válido, sem markdown, no formato exato:
-{"reply": "sua resposta em texto puro para o WhatsApp", "needsHuman": true ou false}
+Use SEMPRE a ferramenta "respond_to_customer" para responder — nunca responda em texto livre fora dela. Marque "needsHuman" como true sempre que a resposta recomendar falar com um atendente humano.`;
 
-"needsHuman" deve ser true sempre que você recomendar falar com um atendente humano na resposta.`;
+const RESPOND_TOOL = {
+  name: 'respond_to_customer',
+  description: 'Envia a resposta final para o cliente no WhatsApp.',
+  input_schema: {
+    type: 'object' as const,
+    properties: {
+      reply: {
+        type: 'string' as const,
+        description: 'A resposta em texto puro (sem markdown) para enviar ao cliente no WhatsApp.',
+      },
+      needsHuman: {
+        type: 'boolean' as const,
+        description: 'true se a resposta recomenda ou requer atendimento humano.',
+      },
+    },
+    required: ['reply', 'needsHuman'],
+  },
+};
 
 export interface SupportBotResult {
   reply: string;
@@ -83,20 +99,21 @@ export async function askSupportBot(history: ChatMessage[]): Promise<SupportBotR
       max_tokens: 500,
       system: SYSTEM_PROMPT,
       messages: history.map((m) => ({ role: m.role, content: m.content })),
+      tools: [RESPOND_TOOL],
+      tool_choice: { type: 'tool', name: 'respond_to_customer' },
     });
 
-    const textBlock = response.content.find((block) => block.type === 'text');
-    const raw = textBlock && 'text' in textBlock ? textBlock.text : '';
-    // Claude sometimes wraps JSON in a ```json ... ``` fence despite being
-    // told not to — strip it before parsing.
-    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
+    const toolUse = response.content.find((block) => block.type === 'tool_use');
+    if (!toolUse || toolUse.type !== 'tool_use') {
+      throw new Error('A IA não retornou uma chamada de ferramenta válida.');
+    }
 
-    const parsed = JSON.parse(cleaned);
-    if (typeof parsed.reply !== 'string') {
+    const input = toolUse.input as { reply?: unknown; needsHuman?: unknown };
+    if (typeof input.reply !== 'string') {
       throw new Error('Resposta da IA sem campo "reply" válido.');
     }
 
-    return { reply: parsed.reply, needsHuman: Boolean(parsed.needsHuman) };
+    return { reply: input.reply, needsHuman: Boolean(input.needsHuman) };
   } catch (err) {
     console.error('Falha ao consultar o assistente de IA:', err);
     return {

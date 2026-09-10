@@ -292,7 +292,7 @@ export default function App() {
     },
     {
       q: 'Quais documentos são exigidos para a videoconferência?',
-      a: 'Para Pessoa Física (e-CPF): Documento de Identificação com foto válido (como CNH, RG ou Carteira de Órgão de Classe como OAB/CRM). Para Pessoa Jurídica (e-CNPJ): Documento de constituição da empresa (como Contrato Social consolidado, CCMEI ou Requerimento de Empresário), além do documento pessoal do representante titular cadastrado perante a Receita Federal.'
+      a: 'Para Pessoa Física (e-CPF): documento de identificação com foto válido (CNH, RG ou Carteira de Órgão de Classe como OAB/CRM), telefone, e-mail e endereço. Para Pessoa Jurídica (e-CNPJ): documento de identificação do representante legal, Cartão CNPJ, Contrato Social em vigor (devidamente registrado em órgão competente), e-mail e telefone do titular.'
     },
     {
       q: 'Qual a diferença técnica e prática entre os modelos A1 e A3?',

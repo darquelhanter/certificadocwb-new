@@ -6,11 +6,12 @@
 // (the secret lives in the URL because not every Evolution API version
 // supports custom webhook headers the way Asaas does).
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getConversationHistory, appendConversationMessage } from './_lib/db.js';
+import { getConversationHistory, appendConversationMessage, getLastAssistantMessage, pausePhone, isPhonePaused } from './_lib/db.js';
 import { askSupportBot } from './_lib/supportBot.js';
 import { sendWhatsAppText } from './_lib/evolutionApi.js';
 
 const ADMIN_NOTIFICATION_NUMBER = '5541992447846';
+const HUMAN_TAKEOVER_PAUSE_HOURS = 24;
 
 function extractMessageText(message: any): string | null {
   if (!message) return null;
@@ -45,19 +46,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const remoteJid: string | undefined = data?.key?.remoteJid;
   const fromMe: boolean = Boolean(data?.key?.fromMe);
 
-  // Ignore our own outgoing messages (avoid replying to ourselves) and group chats.
-  if (!remoteJid || fromMe || remoteJid.endsWith('@g.us')) {
+  if (!remoteJid || remoteJid.endsWith('@g.us')) {
     return res.status(200).json({ ignored: true });
   }
 
+  const phone = remoteJid.split('@')[0];
   const text = extractMessageText(data?.message);
   if (!text) {
     return res.status(200).json({ ignored: true });
   }
 
-  const phone = remoteJid.split('@')[0];
-
   try {
+    if (fromMe) {
+      // Either the bot's own reply echoed back by Evolution API, or the
+      // admin manually typing to this customer. Tell them apart by
+      // comparing against the last thing we ourselves sent.
+      const lastAssistantMessage = await getLastAssistantMessage(phone);
+      if (lastAssistantMessage !== null && lastAssistantMessage.trim() === text.trim()) {
+        return res.status(200).json({ ignored: true, reason: 'bot echo' });
+      }
+
+      // A human (the admin) sent this — stop the bot from also answering
+      // this customer for a while so replies don't collide.
+      await pausePhone(phone, HUMAN_TAKEOVER_PAUSE_HOURS);
+      return res.status(200).json({ ignored: true, reason: 'human takeover' });
+    }
+
+    if (await isPhonePaused(phone)) {
+      return res.status(200).json({ ignored: true, reason: 'paused' });
+    }
+
     await appendConversationMessage(phone, 'user', text);
     const history = await getConversationHistory(phone);
     const { reply, needsHuman } = await askSupportBot(history);

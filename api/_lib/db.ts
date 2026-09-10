@@ -44,6 +44,12 @@ async function ensureTable() {
     )
   `;
   await sql`CREATE INDEX IF NOT EXISTS whatsapp_messages_phone_idx ON whatsapp_messages (phone, created_at)`;
+  await sql`
+    CREATE TABLE IF NOT EXISTS whatsapp_pauses (
+      phone TEXT PRIMARY KEY,
+      paused_until TIMESTAMPTZ NOT NULL
+    )
+  `;
   tableEnsured = true;
 }
 
@@ -134,4 +140,36 @@ export async function appendConversationMessage(phone: string, role: 'user' | 'a
   await ensureTable();
   const sql = getSql();
   await sql`INSERT INTO whatsapp_messages (phone, role, content) VALUES (${phone}, ${role}, ${content})`;
+}
+
+// Used to tell the bot's own outgoing message (echoed back by Evolution API
+// as a fromMe:true event) apart from a message the admin actually typed —
+// if it doesn't match what we just sent, a human took over the conversation.
+export async function getLastAssistantMessage(phone: string): Promise<string | null> {
+  await ensureTable();
+  const sql = getSql();
+  const rows = await sql`
+    SELECT content FROM whatsapp_messages
+    WHERE phone = ${phone} AND role = 'assistant'
+    ORDER BY created_at DESC
+    LIMIT 1
+  `;
+  return (rows as any[])[0]?.content ?? null;
+}
+
+export async function pausePhone(phone: string, hours: number): Promise<void> {
+  await ensureTable();
+  const sql = getSql();
+  await sql`
+    INSERT INTO whatsapp_pauses (phone, paused_until)
+    VALUES (${phone}, now() + (${hours}::text || ' hours')::interval)
+    ON CONFLICT (phone) DO UPDATE SET paused_until = EXCLUDED.paused_until
+  `;
+}
+
+export async function isPhonePaused(phone: string): Promise<boolean> {
+  await ensureTable();
+  const sql = getSql();
+  const rows = await sql`SELECT 1 FROM whatsapp_pauses WHERE phone = ${phone} AND paused_until > now()`;
+  return (rows as any[]).length > 0;
 }

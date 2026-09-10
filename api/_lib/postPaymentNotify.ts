@@ -29,15 +29,15 @@ function normalizePhone(phone: string) {
 function requiredDocsHtml(description: string) {
   const isPJ = /CNPJ/i.test(description);
   return isPJ
-    ? '<li>📄 Documento de constituição da empresa (Contrato Social consolidado, CCMEI ou Requerimento de Empresário)</li><li>🪪 Documento de identificação com foto do representante legal (CNH, RG ou carteira de classe como OAB/CRM)</li>'
-    : '<li>🪪 Documento de identificação com foto (CNH, RG ou carteira de classe como OAB/CRM)</li>';
+    ? '<li>🪪 Documento de identificação do representante legal</li><li>📄 Cartão CNPJ</li><li>📄 Contrato Social em vigor (devidamente registrado em órgão competente)</li><li>📧 E-mail do titular</li><li>📱 Telefone do titular</li>'
+    : '<li>🪪 Documento de identificação com foto (CNH, RG ou carteira de classe como OAB/CRM)</li><li>📱 Telefone</li><li>📧 E-mail</li><li>🏠 Endereço</li>';
 }
 
 function requiredDocsText(description: string) {
   const isPJ = /CNPJ/i.test(description);
   return isPJ
-    ? '📄 Documento de constituição da empresa (Contrato Social consolidado, CCMEI ou Requerimento de Empresário)\n🪪 Documento de identificação com foto do representante legal (CNH, RG ou carteira de classe como OAB/CRM)'
-    : '🪪 Documento de identificação com foto (CNH, RG ou carteira de classe como OAB/CRM)';
+    ? '🪪 Documento de identificação do representante legal\n📄 Cartão CNPJ\n📄 Contrato Social em vigor (devidamente registrado em órgão competente)\n📧 E-mail do titular\n📱 Telefone do titular'
+    : '🪪 Documento de identificação com foto (CNH, RG ou carteira de classe como OAB/CRM)\n📱 Telefone\n📧 E-mail\n🏠 Endereço';
 }
 
 function customerWhatsAppMessage(name: string, description: string) {
