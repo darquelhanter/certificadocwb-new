@@ -17,14 +17,14 @@ export interface AsaasChargeResult {
   body: { invoiceUrl: string; paymentId: string } | { error: string };
 }
 
-function getConfig() {
+export function getConfig() {
   const apiKey = process.env.ASAAS_API_KEY;
   const isProduction = process.env.ASAAS_ENV === 'production';
   const baseUrl = isProduction ? 'https://api.asaas.com/v3' : 'https://api-sandbox.asaas.com/v3';
   return { apiKey, baseUrl };
 }
 
-async function asaasFetch(baseUrl: string, apiKey: string, path: string, init?: RequestInit) {
+export async function asaasFetch(baseUrl: string, apiKey: string, path: string, init?: RequestInit) {
   const response = await fetch(`${baseUrl}${path}`, {
     ...init,
     headers: {

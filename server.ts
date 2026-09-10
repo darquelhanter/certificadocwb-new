@@ -6,6 +6,9 @@ import { submitLeadToEvolutionApi } from './api/_lib/evolutionApi';
 import { createAsaasCharge } from './api/_lib/asaas';
 import { insertLead, listLeads, updateLeadStatus, deleteLead } from './api/_lib/db';
 import { isAuthorized } from './api/_lib/adminAuth';
+import { notifyPaymentConfirmed } from './api/_lib/postPaymentNotify';
+
+const ADMIN_NOTIFICATION_NUMBER = '5541992447846';
 
 dotenv.config();
 
@@ -111,6 +114,31 @@ app.post('/api/create-payment', createPaymentLimiter, async (req, res) => {
     description,
   });
   res.status(result.status).json(result.body);
+});
+
+app.post('/api/asaas-webhook', async (req, res) => {
+  const expectedToken = process.env.ASAAS_WEBHOOK_TOKEN;
+  const providedToken = req.headers['asaas-access-token'];
+  if (!expectedToken || providedToken !== expectedToken) {
+    return res.status(401).json({ error: 'Token de webhook inválido.' });
+  }
+
+  const { event, payment } = req.body || {};
+  if (event !== 'PAYMENT_CONFIRMED' && event !== 'PAYMENT_RECEIVED') {
+    return res.status(200).json({ ignored: true });
+  }
+
+  if (!payment?.customer) {
+    return res.status(400).json({ error: 'Payload sem payment.customer.' });
+  }
+
+  try {
+    await notifyPaymentConfirmed(payment.customer, payment.description || '', payment.value, ADMIN_NOTIFICATION_NUMBER);
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Falha ao processar webhook de pagamento confirmado:', err);
+    res.status(200).json({ success: false });
+  }
 });
 
 async function start() {
