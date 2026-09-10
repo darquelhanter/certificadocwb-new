@@ -7,6 +7,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { notifyPaymentConfirmed } from './_lib/postPaymentNotify.js';
 
 const ADMIN_NOTIFICATION_NUMBER = '5541992447846';
+const ADMIN_NOTIFICATION_EMAIL = 'cwbcertificado@gmail.com';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -33,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    await notifyPaymentConfirmed(payment.customer, payment.description || '', payment.value, ADMIN_NOTIFICATION_NUMBER);
+    await notifyPaymentConfirmed(payment.customer, payment.description || '', payment.value, ADMIN_NOTIFICATION_NUMBER, ADMIN_NOTIFICATION_EMAIL);
     return res.status(200).json({ success: true });
   } catch (err) {
     console.error('Falha ao processar webhook de pagamento confirmado:', err);
