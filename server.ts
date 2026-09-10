@@ -2,11 +2,12 @@ import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
-import { submitLeadToEvolutionApi } from './api/_lib/evolutionApi';
+import { submitLeadToEvolutionApi, sendWhatsAppText } from './api/_lib/evolutionApi';
 import { createAsaasCharge } from './api/_lib/asaas';
-import { insertLead, listLeads, updateLeadStatus, deleteLead } from './api/_lib/db';
+import { insertLead, listLeads, updateLeadStatus, deleteLead, getConversationHistory, appendConversationMessage } from './api/_lib/db';
 import { isAuthorized } from './api/_lib/adminAuth';
 import { notifyPaymentConfirmed } from './api/_lib/postPaymentNotify';
+import { askSupportBot } from './api/_lib/supportBot';
 
 const ADMIN_NOTIFICATION_NUMBER = '5541992447846';
 const ADMIN_NOTIFICATION_EMAIL = 'cwbcertificado@gmail.com';
@@ -138,6 +139,66 @@ app.post('/api/asaas-webhook', async (req, res) => {
     res.status(200).json({ success: true });
   } catch (err) {
     console.error('Falha ao processar webhook de pagamento confirmado:', err);
+    res.status(200).json({ success: false });
+  }
+});
+
+function extractMessageText(message: any): string | null {
+  if (!message) return null;
+  return (
+    message.conversation ||
+    message.extendedTextMessage?.text ||
+    message.imageMessage?.caption ||
+    message.videoMessage?.caption ||
+    null
+  );
+}
+
+app.post('/api/whatsapp-webhook', async (req, res) => {
+  const expectedSecret = process.env.WHATSAPP_WEBHOOK_SECRET;
+  if (!expectedSecret || req.query.secret !== expectedSecret) {
+    return res.status(401).json({ error: 'Secret inválido.' });
+  }
+
+  const body = req.body || {};
+  const event = (body.event || '').toString().toLowerCase();
+  if (event !== 'messages.upsert') {
+    return res.status(200).json({ ignored: true });
+  }
+
+  const data = Array.isArray(body.data) ? body.data[0] : body.data;
+  const remoteJid: string | undefined = data?.key?.remoteJid;
+  const fromMe: boolean = Boolean(data?.key?.fromMe);
+
+  if (!remoteJid || fromMe || remoteJid.endsWith('@g.us')) {
+    return res.status(200).json({ ignored: true });
+  }
+
+  const text = extractMessageText(data?.message);
+  if (!text) {
+    return res.status(200).json({ ignored: true });
+  }
+
+  const phone = remoteJid.split('@')[0];
+
+  try {
+    await appendConversationMessage(phone, 'user', text);
+    const history = await getConversationHistory(phone);
+    const { reply, needsHuman } = await askSupportBot(history);
+    await appendConversationMessage(phone, 'assistant', reply);
+
+    await sendWhatsAppText(phone, reply);
+
+    if (needsHuman) {
+      await sendWhatsAppText(
+        ADMIN_NOTIFICATION_NUMBER,
+        `🙋 A IA identificou que esse cliente precisa de atendimento humano.\n\nNúmero: ${phone}\nÚltima mensagem: "${text}"`
+      );
+    }
+
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Falha ao processar mensagem recebida do WhatsApp:', err);
     res.status(200).json({ success: false });
   }
 });

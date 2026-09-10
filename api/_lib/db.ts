@@ -34,6 +34,16 @@ async function ensureTable() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS whatsapp_messages (
+      id BIGSERIAL PRIMARY KEY,
+      phone TEXT NOT NULL,
+      role TEXT NOT NULL,
+      content TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS whatsapp_messages_phone_idx ON whatsapp_messages (phone, created_at)`;
   tableEnsured = true;
 }
 
@@ -99,4 +109,29 @@ export async function deleteLead(id: string): Promise<void> {
   await ensureTable();
   const sql = getSql();
   await sql`DELETE FROM leads WHERE id = ${id}`;
+}
+
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+// Recent chat history for one WhatsApp number, oldest first — used to give
+// the support bot short-term memory across a customer's messages.
+export async function getConversationHistory(phone: string, limit = 12): Promise<ChatMessage[]> {
+  await ensureTable();
+  const sql = getSql();
+  const rows = await sql`
+    SELECT role, content FROM whatsapp_messages
+    WHERE phone = ${phone}
+    ORDER BY created_at DESC
+    LIMIT ${limit}
+  `;
+  return (rows as any[]).reverse().map((r) => ({ role: r.role, content: r.content }));
+}
+
+export async function appendConversationMessage(phone: string, role: 'user' | 'assistant', content: string): Promise<void> {
+  await ensureTable();
+  const sql = getSql();
+  await sql`INSERT INTO whatsapp_messages (phone, role, content) VALUES (${phone}, ${role}, ${content})`;
 }
