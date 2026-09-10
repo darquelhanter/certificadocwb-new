@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, Phone, Trash2, Zap, Loader2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Search, Phone, Trash2, Zap, Loader2, LogOut } from 'lucide-react';
 import { SubmittedLead } from '../types';
 
 const INTEREST_LABELS: Record<string, string> = {
@@ -11,20 +11,73 @@ const INTEREST_LABELS: Record<string, string> = {
 };
 
 interface HistoryTabProps {
-  submittedLeads: SubmittedLead[];
-  onUpdateLeadStatus: (id: string, status: 'pending' | 'contacted' | 'completed') => void;
-  onDeleteLead: (id: string) => void;
+  adminPassword: string;
+  onLogout: () => void;
 }
 
-export const HistoryTab: React.FC<HistoryTabProps> = ({
-  submittedLeads,
-  onUpdateLeadStatus,
-  onDeleteLead,
-}) => {
+export const HistoryTab: React.FC<HistoryTabProps> = ({ adminPassword, onLogout }) => {
+  const [leads, setLeads] = useState<SubmittedLead[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const [testingWebhook, setTestingWebhook] = useState(false);
   const [webhookTestResult, setWebhookTestResult] = useState<{ ok: boolean; message: string } | null>(null);
+
+  const fetchLeads = async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const response = await fetch('/api/leads/list', {
+        headers: { 'x-admin-password': adminPassword },
+      });
+      if (response.status === 401) {
+        onLogout();
+        return;
+      }
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `status ${response.status}`);
+      }
+      setLeads(data.leads);
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : 'Falha ao carregar leads.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeads();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleUpdateLeadStatus = async (id: string, status: 'pending' | 'contacted' | 'completed') => {
+    setLeads(prev => prev.map(lead => lead.id === id ? { ...lead, status } : lead));
+    try {
+      await fetch('/api/leads/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+        body: JSON.stringify({ id, status }),
+      });
+    } catch (err) {
+      console.error('Falha ao atualizar status:', err);
+    }
+  };
+
+  const handleDeleteLead = async (id: string, name: string) => {
+    if (!confirm(`Remover definitivamente o lead de ${name}?`)) return;
+    setLeads(prev => prev.filter(lead => lead.id !== id));
+    try {
+      await fetch('/api/leads/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+        body: JSON.stringify({ id }),
+      });
+    } catch (err) {
+      console.error('Falha ao remover lead:', err);
+    }
+  };
 
   const handleTestWebhook = async () => {
     setTestingWebhook(true);
@@ -56,6 +109,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
         setWebhookTestResult({ ok: false, message: body.error || `O servidor respondeu com status ${response.status}.` });
       } else {
         setWebhookTestResult({ ok: true, message: 'Mensagem de teste disparada com sucesso pelo WhatsApp da Evolution API!' });
+        fetchLeads();
       }
     } catch (err) {
       setWebhookTestResult({ ok: false, message: 'Falha de rede ao contatar nosso servidor. Verifique se ele está rodando.' });
@@ -64,7 +118,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
     }
   };
 
-  const filteredLeads = submittedLeads.filter(
+  const filteredLeads = leads.filter(
     (l) =>
       l.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       l.phone.replace(/\D/g, '').includes(searchTerm.replace(/\D/g, '')) ||
@@ -80,15 +134,25 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
           <p className="text-xs text-slate-400">Gerencie os contatos de cotação recebidos pelo site</p>
         </div>
 
-        <div className="w-full md:w-auto relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Buscar nome, WhatsApp..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full md:w-64 pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-xl text-xs"
-          />
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <div className="relative flex-1 md:flex-none">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Buscar nome, WhatsApp..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full md:w-64 pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-xl text-xs"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={onLogout}
+            title="Sair"
+            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition shrink-0"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
@@ -121,14 +185,24 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
         )}
       </div>
 
-      {submittedLeads.length === 0 ? (
+      {loading ? (
+        <div className="flex items-center justify-center py-16 text-slate-400 text-xs space-x-2">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          <span>Carregando leads...</span>
+        </div>
+      ) : loadError ? (
+        <div className="text-center py-10 space-y-2">
+          <p className="text-xs text-rose-600">{loadError}</p>
+          <button onClick={fetchLeads} className="text-xs font-bold text-indigo-600 hover:underline">Tentar novamente</button>
+        </div>
+      ) : leads.length === 0 ? (
         <div className="text-center py-12 px-4 space-y-4 max-w-sm mx-auto animate-fade-in">
           <div className="inline-flex p-4 rounded-full bg-emerald-50 text-emerald-500">
             <Phone className="w-8 h-8" />
           </div>
           <h3 className="text-sm font-bold text-slate-800">Nenhum contato recebido</h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            As solicitações enviadas de forma instantânea na página pública do site (formulário de contato) serão arquivadas e exibidas aqui em tempo real.
+            As solicitações enviadas na página pública do site (formulário de contato) serão salvas e exibidas aqui.
           </p>
         </div>
       ) : filteredLeads.length === 0 ? (
@@ -151,17 +225,12 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
             <tbody className="divide-y divide-slate-100 text-slate-700">
               {filteredLeads.map((lead) => {
                 const rawPhone = lead.phone.replace(/\D/g, '');
-                // Setup WhatsApp direct contact link with professional pre-filled response.
                 // Length-based check: a "55" prefix alone is ambiguous since 55 is also a real DDD.
                 const waNumber = rawPhone.length <= 11 ? `55${rawPhone}` : rawPhone;
                 const waLink = `https://wa.me/${waNumber}?text=Olá%20${encodeURIComponent(lead.name)},%20sou%20da%20Certificado%20CWB%20referente%20à%20sua%20solicitação%20no%20nosso%20site.%20Como%20posso%20ajudar%3F`;
 
                 return (
-                  <tr
-                    key={lead.id}
-                    className="hover:bg-slate-50/50 transition-colors group"
-                  >
-                    {/* Name & Contact */}
+                  <tr key={lead.id} className="hover:bg-slate-50/50 transition-colors group">
                     <td className="p-4">
                       <div className="flex items-center space-x-2.5">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-[10px] text-white ${
@@ -178,7 +247,6 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
                       </div>
                     </td>
 
-                    {/* Interest badge */}
                     <td className="p-4">
                       <span className={`text-[9px] uppercase tracking-wide font-black px-2 py-0.5 rounded border inline-block ${
                         lead.interestType === 'ecpf_a1' ? 'bg-cyan-50 text-cyan-700 border-cyan-100' :
@@ -191,19 +259,16 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
                       </span>
                     </td>
 
-                    {/* City */}
                     <td className="p-4 text-slate-500 font-semibold">{lead.city}</td>
 
-                    {/* Timestamp */}
                     <td className="p-4 font-mono text-slate-450 text-[11px]">
                       {new Date(lead.date).toLocaleString('pt-BR')}
                     </td>
 
-                    {/* Selectable Admin status state */}
                     <td className="p-4 text-center">
                       <select
                         value={lead.status}
-                        onChange={(e) => onUpdateLeadStatus(lead.id, e.target.value as any)}
+                        onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value as any)}
                         className={`text-[10px] font-bold py-1 px-2 pb-1 rounded-full border cursor-pointer focus:outline-none transition-colors ${
                           lead.status === 'pending' ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100' :
                           lead.status === 'contacted' ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100' :
@@ -216,7 +281,6 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
                       </select>
                     </td>
 
-                    {/* Admin action buttons */}
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end space-x-1">
                         <a
@@ -230,11 +294,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
                         </a>
                         <button
                           title="Remover Registro de Contato"
-                          onClick={() => {
-                            if (confirm(`Remover definitivamente o lead de ${lead.name}?`)) {
-                              onDeleteLead(lead.id);
-                            }
-                          }}
+                          onClick={() => handleDeleteLead(lead.id, lead.name)}
                           className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"
                         >
                           <Trash2 className="w-3.5 h-3.5" />

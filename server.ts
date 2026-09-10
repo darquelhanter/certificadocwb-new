@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import { submitLeadToEvolutionApi } from './api/_lib/evolutionApi';
 import { createAsaasCharge } from './api/_lib/asaas';
+import { insertLead, listLeads, updateLeadStatus, deleteLead } from './api/_lib/db';
+import { isAuthorized } from './api/_lib/adminAuth';
 
 dotenv.config();
 
@@ -24,8 +26,70 @@ const submitLeadLimiter = rateLimit({
 });
 
 app.post('/api/submit-lead', submitLeadLimiter, async (req, res) => {
+  const { id_lead, nome, telefone, telefone_original, email, cidade, tipo_interesse, mensagem } = req.body || {};
+  try {
+    await insertLead({
+      id: id_lead,
+      name: nome,
+      phone: telefone_original || telefone,
+      email,
+      city: cidade,
+      interestType: tipo_interesse,
+      message: mensagem,
+    });
+  } catch (err) {
+    console.error('Falha ao salvar lead no banco de dados:', err);
+  }
+
   const result = await submitLeadToEvolutionApi(req.body);
   res.status(result.status).json(result.body);
+});
+
+app.get('/api/leads/list', async (req, res) => {
+  if (!isAuthorized(req.headers['x-admin-password'])) {
+    return res.status(401).json({ error: 'Senha incorreta.' });
+  }
+  try {
+    const leads = await listLeads();
+    res.status(200).json({ leads });
+  } catch (err) {
+    console.error('Falha ao listar leads:', err);
+    res.status(500).json({ error: 'Falha ao buscar leads no banco de dados.' });
+  }
+});
+
+app.post('/api/leads/update-status', async (req, res) => {
+  if (!isAuthorized(req.headers['x-admin-password'])) {
+    return res.status(401).json({ error: 'Senha incorreta.' });
+  }
+  const { id, status } = req.body || {};
+  if (!id || !status) {
+    return res.status(400).json({ error: 'Campos "id" e "status" são obrigatórios.' });
+  }
+  try {
+    await updateLeadStatus(id, status);
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Falha ao atualizar status do lead:', err);
+    res.status(500).json({ error: 'Falha ao atualizar o status do lead.' });
+  }
+});
+
+app.post('/api/leads/delete', async (req, res) => {
+  if (!isAuthorized(req.headers['x-admin-password'])) {
+    return res.status(401).json({ error: 'Senha incorreta.' });
+  }
+  const { id } = req.body || {};
+  if (!id) {
+    return res.status(400).json({ error: 'Campo "id" é obrigatório.' });
+  }
+  try {
+    await deleteLead(id);
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Falha ao remover lead:', err);
+    res.status(500).json({ error: 'Falha ao remover o lead.' });
+  }
 });
 
 const createPaymentLimiter = rateLimit({

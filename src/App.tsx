@@ -32,6 +32,7 @@ import {
 import { CertificateTemplateType, LeadData, BlogPost, SubmittedLead } from './types';
 import { PaymentModal } from './components/PaymentModal';
 import { HistoryTab } from './components/HistoryTab';
+import { AdminLogin } from './components/AdminLogin';
 
 declare global {
   interface Window {
@@ -80,12 +81,8 @@ const BLOG_ARTICLES: BlogPost[] = [
 ];
 
 export default function App() {
-  const [submittedLeads, setSubmittedLeads] = useState<SubmittedLead[]>(() => {
-    const stored = localStorage.getItem('certificadocwb_leads');
-    return stored ? JSON.parse(stored) : [];
-  });
-
   const [activeTab, setActiveTab] = useState<'home' | 'blog' | 'history'>('home');
+  const [adminPassword, setAdminPassword] = useState<string | null>(() => sessionStorage.getItem('cwb_admin_pw'));
   const [paymentPlan, setPaymentPlan] = useState<{ title: string; price: string; needsMedia: boolean } | null>(null);
 
   // Lead feedback variables
@@ -106,26 +103,13 @@ export default function App() {
   // FAQ Expand tracker
   const [expandedFaqIndex, setExpandedFaqIndex] = useState<number | null>(null);
 
-  // Sync state to localstorage
-  useEffect(() => {
-    localStorage.setItem('certificadocwb_leads', JSON.stringify(submittedLeads));
-  }, [submittedLeads]);
-
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLeadError(null);
     setLeadSubmitting(true);
 
     const leadId = `CWB-LEAD-${Math.floor(1000 + Math.random() * 9000)}`;
-    const newLead: SubmittedLead = {
-      ...leadForm,
-      id: leadId,
-      date: new Date().toISOString(),
-      status: 'pending'
-    };
-
-    // Always keep the lead in the local CRM, even if the webhook notification fails below
-    setSubmittedLeads(prev => [newLead, ...prev]);
+    const submittedAt = new Date().toISOString();
     trackPixelEvent('Lead');
 
     const rawPhone = leadForm.phone.replace(/\D/g, '');
@@ -147,29 +131,27 @@ export default function App() {
           cidade: leadForm.city,
           tipo_interesse: leadForm.interestType,
           mensagem: leadForm.message || '',
-          data: newLead.date,
+          data: submittedAt,
           origem: 'site_certificadocwb',
         }),
       });
 
+      // The request reaching the server means the lead was saved to the
+      // database (that insert happens before the WhatsApp attempt and can't
+      // fail the response) — a non-ok status here only means the WhatsApp
+      // notification itself failed, not that the lead was lost.
       if (!response.ok) {
-        throw new Error(`status ${response.status}`);
+        setLeadError('Seus dados foram registrados, mas houve uma falha ao notificar nossa equipe automaticamente. Vamos entrar em contato assim que possível.');
       }
+      setLeadSuccess(true);
     } catch (err) {
-      console.error('Erro ao notificar o webhook de leads:', err);
-      setLeadError('Seus dados foram registrados, mas houve uma falha ao notificar nossa equipe automaticamente. Vamos entrar em contato assim que possível.');
+      // A thrown fetch means the request never reached the server at all —
+      // nothing was saved, so don't claim success here.
+      console.error('Erro ao enviar lead:', err);
+      setLeadError('Não foi possível enviar sua solicitação agora. Verifique sua conexão e tente novamente, ou fale conosco direto pelo WhatsApp.');
     } finally {
       setLeadSubmitting(false);
-      setLeadSuccess(true);
     }
-  };
-
-  const handleUpdateLeadStatus = (id: string, status: 'pending' | 'contacted' | 'completed') => {
-    setSubmittedLeads(prev => prev.map(lead => lead.id === id ? { ...lead, status } : lead));
-  };
-
-  const handleDeleteLead = (id: string) => {
-    setSubmittedLeads(prev => prev.filter(lead => lead.id !== id));
   };
 
   // Pricing constants mapping. A3 plans are certificate-only — physical media
@@ -372,7 +354,7 @@ export default function App() {
                   activeTab === 'history' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:text-white hover:bg-slate-800'
                 }`}
               >
-                Leads ({submittedLeads.length})
+                Leads
               </button>
             </nav>
 
@@ -1082,11 +1064,22 @@ export default function App() {
               exit={{ opacity: 0, y: -15 }}
               className="max-w-7xl mx-auto px-4 py-8"
             >
-              <HistoryTab
-                submittedLeads={submittedLeads}
-                onUpdateLeadStatus={handleUpdateLeadStatus}
-                onDeleteLead={handleDeleteLead}
-              />
+              {adminPassword ? (
+                <HistoryTab
+                  adminPassword={adminPassword}
+                  onLogout={() => {
+                    sessionStorage.removeItem('cwb_admin_pw');
+                    setAdminPassword(null);
+                  }}
+                />
+              ) : (
+                <AdminLogin
+                  onSuccess={(password) => {
+                    sessionStorage.setItem('cwb_admin_pw', password);
+                    setAdminPassword(password);
+                  }}
+                />
+              )}
             </motion.div>
           )}
 
