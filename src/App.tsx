@@ -37,6 +37,7 @@ import { AdminLogin } from './components/AdminLogin';
 declare global {
   interface Window {
     fbq?: (...args: any[]) => void;
+    gtag?: (...args: any[]) => void;
   }
 }
 
@@ -44,6 +45,16 @@ declare global {
 // the pixel script (index.html) hasn't loaded yet or is blocked.
 const trackPixelEvent = (event: string) => {
   window.fbq?.('track', event);
+};
+
+// Reports the "Enviar formulário de lead" conversion to Google Ads
+// (AW-18445597087/tCRRCK-7vvQaEJ_zxdtE), configured in the Google Ads account.
+const trackGoogleLeadConversion = () => {
+  window.gtag?.('event', 'conversion', {
+    send_to: 'AW-18445597087/tCRRCK-7vvQaEJ_zxdtE',
+    value: 1.0,
+    currency: 'BRL',
+  });
 };
 
 // Authentic mock blog articles
@@ -132,6 +143,7 @@ export default function App() {
     const leadId = `CWB-LEAD-${Math.floor(1000 + Math.random() * 9000)}`;
     const submittedAt = new Date().toISOString();
     trackPixelEvent('Lead');
+    trackGoogleLeadConversion();
 
     const rawPhone = leadForm.phone.replace(/\D/g, '');
     // Brazilian local numbers are 10-11 digits (DDD + number); anything longer
