@@ -369,14 +369,6 @@ export default function App() {
               >
                 Blog / Ajuda
               </button>
-              <button
-                onClick={() => { setActiveTab('history'); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-                  activeTab === 'history' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:text-white hover:bg-slate-800'
-                }`}
-              >
-                Leads
-              </button>
             </nav>
 
             {/* Top CTA */}
@@ -1136,7 +1128,6 @@ export default function App() {
                   <span className="block text-slate-500 font-bold uppercase tracking-wider text-[10px]">Novidades</span>
                   <ul className="space-y-1.5 text-slate-400">
                     <li><button onClick={() => setActiveTab('blog')} className="hover:text-white">Blog de Ajuda</button></li>
-                    <li><button onClick={() => setActiveTab('history')} className="hover:text-white">Painel de Leads</button></li>
                     <li><a href="https://wa.me/5541992447846" target="_blank" rel="noreferrer" className="hover:text-white">Atendimento</a></li>
                   </ul>
                 </div>
@@ -1181,10 +1172,17 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="flex space-x-3 text-slate-500 shrink-0">
+              <div className="flex items-center space-x-3 text-slate-500 shrink-0">
                 <span>Políticas de Privacidade</span>
                 <span>•</span>
                 <span>Termos de Uso</span>
+                <button
+                  onClick={() => setActiveTab('history')}
+                  aria-label="Acesso interno"
+                  className="text-slate-800 hover:text-slate-500 transition-colors"
+                >
+                  <Lock className="w-2.5 h-2.5" />
+                </button>
               </div>
             </div>
           </div>
