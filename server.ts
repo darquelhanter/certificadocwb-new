@@ -160,7 +160,7 @@ app.post('/api/asaas-webhook', async (req, res) => {
   }
 
   try {
-    await notifyPaymentConfirmed(payment.customer, payment.description || '', payment.value, ADMIN_NOTIFICATION_NUMBER, ADMIN_NOTIFICATION_EMAIL);
+    await notifyPaymentConfirmed(payment.customer, payment.description || '', payment.value, ADMIN_NOTIFICATION_NUMBER, ADMIN_NOTIFICATION_EMAIL, payment.id);
     res.status(200).json({ success: true });
   } catch (err) {
     console.error('Falha ao processar webhook de pagamento confirmado:', err);

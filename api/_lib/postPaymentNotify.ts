@@ -4,6 +4,7 @@
 import { getConfig, asaasFetch } from './asaas.js';
 import { sendWhatsAppText } from './evolutionApi.js';
 import { sendEmail } from './email.js';
+import { sendMetaPurchaseEvent } from './metaConversions.js';
 
 interface AsaasCustomer {
   id: string;
@@ -64,7 +65,7 @@ function logSettled(label: string, result: PromiseSettledResult<{ status: number
   }
 }
 
-export async function notifyPaymentConfirmed(customerId: string, description: string, value: number, adminNumber: string, adminEmail: string): Promise<void> {
+export async function notifyPaymentConfirmed(customerId: string, description: string, value: number, adminNumber: string, adminEmail: string, paymentId?: string): Promise<void> {
   const { apiKey, baseUrl } = getConfig();
   if (!apiKey) {
     console.error('ASAAS_API_KEY não configurada — não é possível buscar dados do cliente para notificar.');
@@ -88,8 +89,14 @@ export async function notifyPaymentConfirmed(customerId: string, description: st
       ? sendEmail(customer.email, 'Pagamento confirmado — Certificado CWB 🎉', customerEmailHtml(customer.name, description))
       : Promise.resolve(),
     sendEmail(adminEmail, `💰 Novo pagamento confirmado — ${customer.name}`, adminAlertHtml(customer, description, value)),
+    sendMetaPurchaseEvent({
+      email: customer.email,
+      phone: customerPhone,
+      value,
+      orderId: paymentId || `${customerId}-${description}`,
+    }),
   ]);
 
-  const labels = ['whatsapp cliente', 'whatsapp admin', 'email cliente', 'email admin'];
+  const labels = ['whatsapp cliente', 'whatsapp admin', 'email cliente', 'email admin', 'meta purchase event'];
   results.forEach((result, i) => logSettled(labels[i], result));
 }

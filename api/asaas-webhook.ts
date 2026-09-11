@@ -34,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    await notifyPaymentConfirmed(payment.customer, payment.description || '', payment.value, ADMIN_NOTIFICATION_NUMBER, ADMIN_NOTIFICATION_EMAIL);
+    await notifyPaymentConfirmed(payment.customer, payment.description || '', payment.value, ADMIN_NOTIFICATION_NUMBER, ADMIN_NOTIFICATION_EMAIL, payment.id);
     return res.status(200).json({ success: true });
   } catch (err) {
     console.error('Falha ao processar webhook de pagamento confirmado:', err);
