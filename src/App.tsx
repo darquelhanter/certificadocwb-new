@@ -671,6 +671,9 @@ export default function App() {
                   <p className="text-xs sm:text-sm text-ink/60 max-w-sm mx-auto leading-relaxed">
                     Sem letras miúdas. Sem surpresas ou taxas ocultas. Apenas o melhor custo-benefício de Curitiba.
                   </p>
+                  <p className="text-[11px] text-ink/50 max-w-md mx-auto leading-relaxed">
+                    Sem certificado válido, notas fiscais e assinaturas digitais ficam bloqueadas. Não sabe qual escolher? <strong className="text-ink">Pessoa física → e-CPF. Empresa com CNPJ ativo → e-CNPJ.</strong>
+                  </p>
 
                   {/* Filter switches */}
                   <div className="inline-flex bg-white p-1.5 rounded-sm border border-hairline">
@@ -732,10 +735,20 @@ export default function App() {
 
                         <p className="text-xs text-ink/50 leading-normal min-h-[64px]">{plan.desc}</p>
 
-                        <div className="py-2.5 border-y border-hairline flex items-baseline space-x-1.5">
-                          <span className="text-xs font-bold text-ink/50 uppercase select-none">R$</span>
-                          <span className="text-3xl font-display font-semibold text-ink">{plan.price}</span>
-                          <span className="text-xs text-ink/50 font-medium">/ emissão</span>
+                        <div className="py-2.5 border-y border-hairline space-y-0.5">
+                          <div className="flex items-baseline space-x-1.5">
+                            <span className="text-xs font-bold text-ink/50 uppercase select-none">R$</span>
+                            <span className="text-3xl font-display font-semibold text-ink">{plan.price}</span>
+                            <span className="text-xs text-ink/50 font-medium">/ emissão</span>
+                          </div>
+                          {(() => {
+                            const months = parseInt(plan.duration.match(/(\d+)\s*Meses/)?.[1] || '0', 10);
+                            if (months <= 12) return null;
+                            const perMonth = (parseFloat(plan.price.replace(',', '.')) / months).toFixed(2).replace('.', ',');
+                            return (
+                              <p className="text-[10px] text-ink/40">equivale a R$ {perMonth}/mês nos {months} meses de validade</p>
+                            );
+                          })()}
                         </div>
 
                         <ul className="space-y-2 text-ink/70 font-sans text-xs min-h-[140px] pt-2" role="list">
@@ -894,7 +907,7 @@ export default function App() {
                     O que dizem os contadores e empresários em Curitiba
                   </h3>
                   <p className="text-xs sm:text-sm text-ink/60 max-w-sm mx-auto leading-relaxed">
-                    Centenas de clientes já emitiram seus certificados digitais com a Certificado CWB.
+                    Emitindo certificados digitais desde 2022, com mais de 20 novos certificados entregues todo mês para clientes de Curitiba e região.
                   </p>
                 </div>
 
