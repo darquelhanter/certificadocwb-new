@@ -181,6 +181,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ adminPassword, onLogout 
             type="button"
             onClick={onLogout}
             title="Sair"
+            aria-label="Sair"
             className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition shrink-0"
           >
             <LogOut className="w-4 h-4" />
@@ -323,7 +324,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ adminPassword, onLogout 
                       <select
                         value={lead.status}
                         onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value as any)}
-                        className={`text-[10px] font-bold py-1 px-2 pb-1 rounded-full border cursor-pointer focus:outline-none transition-colors ${
+                        className={`text-[10px] font-bold py-1 px-2 pb-1 rounded-full border cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-colors ${
                           lead.status === 'pending' ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100' :
                           lead.status === 'contacted' ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100' :
                           'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
@@ -342,12 +343,14 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ adminPassword, onLogout 
                           target="_blank"
                           referrerPolicy="no-referrer"
                           title="Conversar com o Lead via WhatsApp"
+                          aria-label={`Conversar com ${lead.name} via WhatsApp`}
                           className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition"
                         >
                           <Phone className="w-3.5 h-3.5" />
                         </a>
                         <button
                           title="Remover Registro de Contato"
+                          aria-label={`Remover registro de ${lead.name}`}
                           onClick={() => handleDeleteLead(lead.id, lead.name)}
                           className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"
                         >

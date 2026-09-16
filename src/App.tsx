@@ -1005,9 +1005,11 @@ export default function App() {
                     ← Voltar para listagem de artigos
                   </button>
 
-                  <img 
-                    src={activeArticle.coverImage} 
-                    alt={activeArticle.title} 
+                  <img
+                    src={activeArticle.coverImage}
+                    alt={activeArticle.title}
+                    width={800}
+                    height={256}
                     referrerPolicy="no-referrer"
                     className="w-full h-64 object-cover rounded-2xl border"
                   />
@@ -1041,14 +1043,20 @@ export default function App() {
                 /* Grid view list of Articles */
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {BLOG_ARTICLES.map((art) => (
-                    <div 
-                      key={art.slug} 
+                    <div
+                      key={art.slug}
                       onClick={() => setActiveArticle(art)}
-                      className="bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-slate-250 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveArticle(art); } }}
+                      className="bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-slate-250 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                     >
-                      <img 
-                        src={art.coverImage} 
-                        alt={art.title} 
+                      <img
+                        src={art.coverImage}
+                        alt={art.title}
+                        width={400}
+                        height={176}
+                        loading="lazy"
                         referrerPolicy="no-referrer"
                         className="w-full h-44 object-cover border-b"
                       />

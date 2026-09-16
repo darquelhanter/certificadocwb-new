@@ -123,7 +123,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
               <p className="text-xs text-slate-400">Cartão, Pix ou Boleto</p>
             </div>
           </div>
-          <button type="button" onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+          <button type="button" onClick={onClose} aria-label="Fechar" className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -133,8 +133,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
             <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="pay-name">Nome Completo / Razão Social</label>
             <input
               id="pay-name"
+              name="name"
               type="text"
               required
+              autoComplete="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-sm"
@@ -159,8 +161,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
               <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="pay-email">E-mail</label>
               <input
                 id="pay-email"
+                name="email"
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-sm"
@@ -170,8 +174,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
               <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="pay-phone">WhatsApp</label>
               <input
                 id="pay-phone"
+                name="phone"
                 type="tel"
                 required
+                autoComplete="tel"
                 placeholder="(41) 99244-7846"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}

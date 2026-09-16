@@ -50,6 +50,8 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess }) => {
       <form onSubmit={handleSubmit} className="space-y-3">
         <input
           type="password"
+          name="password"
+          autoComplete="current-password"
           required
           autoFocus
           placeholder="Senha"
