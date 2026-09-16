@@ -108,29 +108,29 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" onClick={onClose}>
+    <div className="fixed inset-0 z-[100] bg-ink/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" onClick={onClose}>
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5 my-8"
+        className="bg-white rounded-sm border border-hairline shadow-2xl w-full max-w-md p-6 space-y-5 my-8"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-2.5">
-            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+            <div className="p-2 rounded-sm bg-seal/10 text-seal">
               <CreditCard className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-800">Pagar {planTitle}</h3>
-              <p className="text-xs text-slate-400">Cartão, Pix ou Boleto</p>
+              <h3 className="text-sm font-bold text-ink">Pagar {planTitle}</h3>
+              <p className="text-xs text-ink/50">Cartão, Pix ou Boleto</p>
             </div>
           </div>
-          <button type="button" onClick={onClose} aria-label="Fechar" className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+          <button type="button" onClick={onClose} aria-label="Fechar" className="text-ink/40 hover:text-ink p-1 rounded-sm hover:bg-parchment transition">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3.5">
           <div className="space-y-1">
-            <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="pay-name">Nome Completo / Razão Social</label>
+            <label className="text-[10px] font-bold text-ink/50 block uppercase" htmlFor="pay-name">Nome Completo / Razão Social</label>
             <input
               id="pay-name"
               name="name"
@@ -139,12 +139,12 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
               autoComplete="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-sm"
+              className="w-full bg-parchment border border-hairline focus:bg-white focus:outline-none focus:border-seal rounded-sm p-2 text-sm"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="pay-doc">CPF ou CNPJ</label>
+            <label className="text-[10px] font-bold text-ink/50 block uppercase" htmlFor="pay-doc">CPF ou CNPJ</label>
             <input
               id="pay-doc"
               type="text"
@@ -152,13 +152,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
               placeholder="000.000.000-00"
               value={cpfCnpj}
               onChange={(e) => setCpfCnpj(formatCpfCnpj(e.target.value))}
-              className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-sm font-mono"
+              className="w-full bg-parchment border border-hairline focus:bg-white focus:outline-none focus:border-seal rounded-sm p-2 text-sm font-mono"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="pay-email">E-mail</label>
+              <label className="text-[10px] font-bold text-ink/50 block uppercase" htmlFor="pay-email">E-mail</label>
               <input
                 id="pay-email"
                 name="email"
@@ -167,11 +167,11 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-sm"
+                className="w-full bg-parchment border border-hairline focus:bg-white focus:outline-none focus:border-seal rounded-sm p-2 text-sm"
               />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="pay-phone">WhatsApp</label>
+              <label className="text-[10px] font-bold text-ink/50 block uppercase" htmlFor="pay-phone">WhatsApp</label>
               <input
                 id="pay-phone"
                 name="phone"
@@ -181,22 +181,22 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
                 placeholder="(41) 99244-7846"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-sm font-mono"
+                className="w-full bg-parchment border border-hairline focus:bg-white focus:outline-none focus:border-seal rounded-sm p-2 text-sm font-mono"
               />
             </div>
           </div>
 
           {needsMedia && (
             <div className="space-y-1.5 pt-1">
-              <label className="text-[10px] font-bold text-slate-400 block uppercase">Adicionar Mídia Física (opcional, 10% de desconto no combo)</label>
+              <label className="text-[10px] font-bold text-ink/50 block uppercase">Adicionar Mídia Física (opcional, 10% de desconto no combo)</label>
               <div className="space-y-1.5">
                 {mediaAddons.map(addon => (
                   <label
                     key={addon.id}
-                    className={`flex items-center justify-between p-2.5 rounded-lg border cursor-pointer transition ${
+                    className={`flex items-center justify-between p-2.5 rounded-sm border cursor-pointer transition ${
                       selectedAddons.includes(addon.id)
-                        ? 'border-indigo-600 bg-indigo-50/50'
-                        : 'border-slate-200 hover:border-slate-300'
+                        ? 'border-seal bg-seal/5'
+                        : 'border-hairline hover:border-seal/50'
                     }`}
                   >
                     <span className="flex items-center space-x-2">
@@ -204,11 +204,11 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
                         type="checkbox"
                         checked={selectedAddons.includes(addon.id)}
                         onChange={() => toggleAddon(addon.id)}
-                        className="accent-indigo-600"
+                        className="accent-seal"
                       />
-                      <span className="text-xs font-semibold text-slate-700">{addon.name}</span>
+                      <span className="text-xs font-semibold text-ink/80">{addon.name}</span>
                     </span>
-                    <span className="text-xs font-mono text-slate-500">R$ {formatBRL(addon.price)}</span>
+                    <span className="text-xs font-mono text-ink/50">R$ {formatBRL(addon.price)}</span>
                   </label>
                 ))}
               </div>
@@ -216,24 +216,24 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
           )}
 
           {/* Price breakdown */}
-          <div className="border-t border-slate-100 pt-3 space-y-1 text-xs">
-            <div className="flex justify-between text-slate-500">
+          <div className="border-t border-hairline pt-3 space-y-1 text-xs">
+            <div className="flex justify-between text-ink/60">
               <span>{planTitle}</span>
               <span className="font-mono">R$ {formatBRL(certPrice)}</span>
             </div>
             {chosenAddons.map(addon => (
-              <div key={addon.id} className="flex justify-between text-slate-500">
+              <div key={addon.id} className="flex justify-between text-ink/60">
                 <span>{addon.name}</span>
                 <span className="font-mono">R$ {formatBRL(addon.price)}</span>
               </div>
             ))}
             {discount > 0 && (
-              <div className="flex justify-between text-emerald-600 font-semibold">
+              <div className="flex justify-between text-verify font-semibold">
                 <span>Desconto combo (10%)</span>
                 <span className="font-mono">- R$ {formatBRL(discount)}</span>
               </div>
             )}
-            <div className="flex justify-between text-sm font-bold text-slate-800 pt-1.5 border-t border-slate-100">
+            <div className="flex justify-between text-sm font-bold text-ink pt-1.5 border-t border-hairline">
               <span>Total</span>
               <span className="font-mono">R$ {formatBRL(total)}</span>
             </div>
@@ -246,13 +246,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ planTitle, planPrice
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-bold text-sm py-2.5 px-4 rounded-xl shadow-sm transition flex items-center justify-center space-x-2"
+            className="w-full bg-seal hover:bg-seal-light disabled:opacity-60 text-white hover:text-ink font-bold text-sm py-2.5 px-4 rounded-sm transition flex items-center justify-center space-x-2"
           >
             {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
-            <span>{submitting ? 'Gerando cobrança...' : 'Continuar para Pagamento'}</span>
+            <span>{submitting ? 'Gerando cobrança…' : 'Continuar para Pagamento'}</span>
           </button>
 
-          <p className="text-[9px] text-slate-400 text-center leading-relaxed">
+          <p className="text-[9px] text-ink/40 text-center leading-relaxed">
             Você será redirecionado para a página segura do Asaas para concluir o pagamento via Pix, boleto ou cartão de crédito.
           </p>
         </form>

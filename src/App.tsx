@@ -33,6 +33,7 @@ import { CertificateTemplateType, LeadData, BlogPost, SubmittedLead } from './ty
 import { PaymentModal } from './components/PaymentModal';
 import { HistoryTab } from './components/HistoryTab';
 import { AdminLogin } from './components/AdminLogin';
+import { GuillocheWatermark } from './components/GuillocheWatermark';
 
 declare global {
   interface Window {
@@ -343,32 +344,32 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-16 selection:bg-indigo-600 selection:text-white">
+    <div className="min-h-screen bg-parchment text-ink font-sans pb-16 selection:bg-seal selection:text-white">
       {/* Dynamic Screen Layout */}
       <div id="root-layout" className="space-y-0">
         
         {/* Banner Top Header bar */}
-        <header className="bg-[#0f172a] text-white border-b border-slate-800 sticky top-0 z-50 backdrop-blur-md bg-opacity-95">
+        <header className="bg-ink text-parchment border-b border-black/20 sticky top-0 z-50 backdrop-blur-md bg-opacity-95">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
             
             {/* Logo / Brand identity */}
             <div className="flex items-center space-x-3 cursor-pointer select-none" onClick={() => setActiveTab('home')}>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-600/30">
+              <div className="w-10 h-10 rounded-sm bg-seal flex items-center justify-center shadow-lg shadow-black/30">
                 <ShieldCheck className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-display font-bold tracking-tight text-white uppercase">
+                <h1 className="text-xl font-display font-semibold tracking-tight text-parchment uppercase">
                   CERTIFICADO DIGITAL
                 </h1>
               </div>
             </div>
 
             {/* Desktop Navigation menus */}
-            <nav className="flex flex-wrap items-center justify-center gap-1.5 p-1 bg-slate-900 border border-slate-800 rounded-xl">
+            <nav className="flex flex-wrap items-center justify-center gap-1.5 p-1 bg-ink-light border border-black/20 rounded-xl">
               <button
                 onClick={() => { setActiveTab('home'); }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-                  activeTab === 'home' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                  activeTab === 'home' ? 'bg-seal text-white shadow-sm' : 'text-parchment/60 hover:text-parchment hover:bg-black/20'
                 }`}
               >
                 Início
@@ -376,7 +377,7 @@ export default function App() {
               <button
                 onClick={() => { setActiveTab('blog'); }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-                  activeTab === 'blog' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                  activeTab === 'blog' ? 'bg-seal text-white shadow-sm' : 'text-parchment/60 hover:text-parchment hover:bg-black/20'
                 }`}
               >
                 Blog / Ajuda
@@ -409,22 +410,26 @@ export default function App() {
               className="space-y-0"
             >
               {/* HERO SECTION */}
-              <section className="relative overflow-hidden bg-slate-950 text-white py-14 sm:py-24 border-b border-slate-900">
-                {/* Glowing aesthetic backdrop glow */}
-                <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[550px] sm:w-[850px] h-[350px] bg-gradient-to-tr from-indigo-600/15 via-indigo-900/10 to-indigo-500/5 blur-[120px] pointer-events-none rounded-full" />
-                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+              <section className="relative overflow-hidden bg-ink text-parchment py-14 sm:py-24 border-b border-black/20">
+                {/* Guilloché rosette — the security-engraving pattern found on real
+                    certificates and seals, in place of a generic gradient blob */}
+                <GuillocheWatermark
+                  stroke="#c99a3d"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] sm:w-[980px] h-auto opacity-[0.09] pointer-events-none"
+                />
 
                 <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
                   <div className="space-y-6">
-                    <div className="inline-flex items-center space-x-2 px-3 py-1 bg-indigo-500/10 text-indigo-300 rounded-full border border-indigo-500/20 text-xs font-semibold">
-                      <span>Emissão 100% Online por Videoconferência</span>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 border border-seal-light/40 text-seal-light text-[11px] font-mono tracking-wide">
+                      <span>Protocolo ICP-Brasil · Emissão por Videoconferência</span>
                     </div>
-                    
-                    <h2 className="text-3xl sm:text-5xl font-display font-extrabold tracking-tight leading-none text-white">
-                      Certificado Digital com Validade Jurídica em <span className="text-indigo-400 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-indigo-300 to-indigo-200">Todo o Brasil</span>
-                    </h2>
 
-                    <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                    <h2 className="text-3xl sm:text-5xl font-display font-semibold tracking-tight leading-[1.1] text-parchment">
+                      Certificado digital com validade jurídica em todo o Brasil
+                    </h2>
+                    <div className="w-16 h-px bg-seal-light/60 mx-auto" />
+
+                    <p className="text-sm sm:text-base text-parchment/70 max-w-2xl mx-auto leading-relaxed">
                       e-CPF e e-CNPJ emitidos por videoconferência segura, homologada pela ICP-Brasil. Rápido, oficial e sem sair de casa.
                     </p>
 
@@ -434,7 +439,7 @@ export default function App() {
                           const pricesSection = document.getElementById('pricing-anchored');
                           pricesSection?.scrollIntoView({ behavior: 'smooth' });
                         }}
-                        className="w-full sm:w-auto px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-lg hover:shadow-indigo-600/25 transition-all flex items-center justify-center space-x-1.5"
+                        className="w-full sm:w-auto px-6 py-3 bg-seal hover:bg-seal-light text-white hover:text-ink font-bold text-sm rounded-sm shadow-lg transition-all flex items-center justify-center space-x-1.5"
                       >
                         <span>Ver Certificados e Preços</span>
                         <ChevronRight className="w-4 h-4" />
@@ -442,17 +447,17 @@ export default function App() {
                     </div>
 
                     {/* Micro checkmarks */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-6 border-t border-slate-900 text-slate-400 text-xs max-w-xl mx-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-6 border-t border-parchment/10 text-parchment/60 text-xs max-w-xl mx-auto">
                       <div className="flex items-center justify-center space-x-1.5">
-                        <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
+                        <CheckCircle className="w-4 h-4 text-verify shrink-0" />
                         <span>Padrão ICP-Brasil</span>
                       </div>
                       <div className="flex items-center justify-center space-x-1.5">
-                        <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
+                        <CheckCircle className="w-4 h-4 text-verify shrink-0" />
                         <span>Emissão de qualquer lugar do Brasil</span>
                       </div>
                       <div className="flex items-center justify-center space-x-1.5">
-                        <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
+                        <CheckCircle className="w-4 h-4 text-verify shrink-0" />
                         <span>Videochamada em 5 minutos</span>
                       </div>
                     </div>
@@ -461,23 +466,23 @@ export default function App() {
               </section>
 
               {/* STATS STRIP BANNER */}
-              <section className="bg-white border-b border-slate-100 py-6 text-center shadow-xs">
+              <section className="bg-white border-b border-hairline py-6 text-center">
                 <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 lg:grid-cols-4 gap-6">
                   <div>
-                    <span className="block text-2xl font-bold font-display text-slate-800">15 Minutos</span>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Prazo Médio de Validação</span>
+                    <span className="block text-2xl font-bold font-display text-ink">15 Minutos</span>
+                    <span className="text-[10px] text-ink/50 font-bold uppercase tracking-wider">Prazo Médio de Validação</span>
                   </div>
                   <div>
-                    <span className="block text-2xl font-bold font-display text-slate-800">100% Online</span>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Emissão por Videoconferência</span>
+                    <span className="block text-2xl font-bold font-display text-ink">100% Online</span>
+                    <span className="text-[10px] text-ink/50 font-bold uppercase tracking-wider">Emissão por Videoconferência</span>
                   </div>
                   <div>
-                    <span className="block text-2xl font-bold font-display text-slate-800">ICP-Brasil</span>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Validadores Oficiais</span>
+                    <span className="block text-2xl font-bold font-display text-ink">ICP-Brasil</span>
+                    <span className="text-[10px] text-ink/50 font-bold uppercase tracking-wider">Validadores Oficiais</span>
                   </div>
                   <div>
-                    <span className="block text-2xl font-bold font-display text-slate-800">R$ {lowestPriceFormatted}</span>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Preço Mínimo Garantido</span>
+                    <span className="block text-2xl font-bold font-display text-ink">R$ {lowestPriceFormatted}</span>
+                    <span className="text-[10px] text-ink/50 font-bold uppercase tracking-wider">Preço Mínimo Garantido</span>
                   </div>
                 </div>
               </section>
@@ -485,45 +490,44 @@ export default function App() {
               {/* WHY CHOOSE US SECTION */}
               <section className="max-w-7xl mx-auto px-4 py-16 space-y-10">
                 <div className="text-center space-y-3">
-                  <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest block">Benefícios de Destaque</span>
-                  <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-800">
+                  <h3 className="text-2xl sm:text-3xl font-display font-semibold text-ink">
                     Por que escolher a CERTIFICADO DIGITAL?
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
+                  <p className="text-xs sm:text-sm text-ink/60 max-w-lg mx-auto leading-relaxed">
                     Unimos atendimento regional especializado, suporte humanizado em Curitiba e a tecnologia mais ágil do Brasil para garantir a perfeita emissão das suas chaves criptográficas.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Item 1 */}
-                  <div className="bg-white rounded-2xl p-6 border border-slate-100 hover:border-slate-200 shadow-sm hover:shadow-md transition-all space-y-3">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                  <div className="bg-white rounded-sm p-6 border border-hairline hover:border-seal/50 transition-all space-y-3">
+                    <div className="w-10 h-10 rounded-sm bg-seal/10 text-seal flex items-center justify-center">
                       <Clock className="w-5 h-5" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800 uppercase tracking-tight">Atendimento Veloz</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed">
+                    <h4 className="text-sm font-bold text-ink uppercase tracking-tight">Atendimento Veloz</h4>
+                    <p className="text-xs text-ink/60 leading-relaxed">
                       Agendamento no mesmo dia com emissão em menos de 15 minutos via chamada de vídeo para maior otimização do seu tempo corporativo.
                     </p>
                   </div>
 
                   {/* Item 2 */}
-                  <div className="bg-white rounded-2xl p-6 border border-slate-100 hover:border-slate-200 shadow-sm hover:shadow-md transition-all space-y-3">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                  <div className="bg-white rounded-sm p-6 border border-hairline hover:border-seal/50 transition-all space-y-3">
+                    <div className="w-10 h-10 rounded-sm bg-seal/10 text-seal flex items-center justify-center">
                       <UserCheck className="w-5 h-5" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800 uppercase tracking-tight">Suporte Curitibano Premium</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed">
+                    <h4 className="text-sm font-bold text-ink uppercase tracking-tight">Suporte Curitibano Premium</h4>
+                    <p className="text-xs text-ink/60 leading-relaxed">
                       Suporte humanizado local em Curitiba pronto para tirar dúvidas de validação, senhas, PIN/PUK e guiar na correta instalação.
                     </p>
                   </div>
 
                   {/* Item 3 */}
-                  <div className="bg-white rounded-2xl p-6 border border-slate-100 hover:border-slate-200 shadow-sm hover:shadow-md transition-all space-y-3">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                  <div className="bg-white rounded-sm p-6 border border-hairline hover:border-seal/50 transition-all space-y-3">
+                    <div className="w-10 h-10 rounded-sm bg-seal/10 text-seal flex items-center justify-center">
                       <Lock className="w-5 h-5" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800 uppercase tracking-tight">Padrão Nacional de Segurança</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed">
+                    <h4 className="text-sm font-bold text-ink uppercase tracking-tight">Padrão Nacional de Segurança</h4>
+                    <p className="text-xs text-ink/60 leading-relaxed">
                       Nossos certificados são gerados sob rígidos padrões estabelecidos pela ICP-Brasil e possuem o mesmo valor de assinaturas de próprio punho.
                     </p>
                   </div>
@@ -531,14 +535,13 @@ export default function App() {
               </section>
 
               {/* HOW IT WORKS CHRONOLOGICAL TIMELINE */}
-              <section className="bg-slate-50 border-y border-slate-200/60 py-16">
+              <section className="bg-white border-y border-hairline py-16">
                 <div className="max-w-7xl mx-auto px-4 space-y-12">
                   <div className="text-center space-y-3">
-                    <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest block font-mono">Sem Complicação</span>
-                    <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 tracking-tight">
+                    <h3 className="text-2xl sm:text-3xl font-display font-semibold text-ink tracking-tight">
                       Entenda como funciona o processo de emissão do seu Certificado Digital
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto leading-relaxed">
+                    <p className="text-xs sm:text-sm text-ink/60 max-w-xl mx-auto leading-relaxed">
                       Para facilitar sua experiência, dividimos o processo de emissão em 5 etapas simples:
                     </p>
                   </div>
@@ -572,24 +575,24 @@ export default function App() {
                         desc: 'Após a aprovação da validação, seu certificado digital estará disponível para emissão. Caso tenha alguma dificuldade durante essa etapa, nossa equipe de suporte estará pronta para auxiliá-lo.' 
                       },
                     ].map((item, idx) => (
-                      <div 
-                        key={idx} 
-                        className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs hover:shadow-md hover:border-indigo-400 transition-all flex flex-col justify-between group relative overflow-hidden"
+                      <div
+                        key={idx}
+                        className="bg-white border border-hairline rounded-sm p-5 hover:border-seal transition-all flex flex-col justify-between group relative overflow-hidden"
                       >
                         <div className="space-y-4">
-                          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-indigo-50 group-hover:bg-indigo-600 text-indigo-600 group-hover:text-white font-mono text-xs font-extrabold transition-all duration-300">
+                          <div className="flex items-center justify-between border-b border-hairline pb-3">
+                            <span className="flex items-center justify-center w-7 h-7 rounded-sm bg-seal/10 group-hover:bg-seal text-seal group-hover:text-white font-mono text-xs font-extrabold transition-all duration-300">
                               {item.step}
                             </span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">
+                            <span className="text-[10px] font-bold text-ink/40 uppercase tracking-widest font-mono">
                               Passo {item.step}
                             </span>
                           </div>
                           <div className="space-y-2">
-                            <h4 className="text-sm font-extrabold text-slate-800 group-hover:text-indigo-900 transition-colors">
+                            <h4 className="text-sm font-extrabold text-ink transition-colors">
                               {item.title}
                             </h4>
-                            <p className="text-[11px] leading-relaxed text-slate-500 font-medium group-hover:text-slate-600 transition-colors">
+                            <p className="text-[11px] leading-relaxed text-ink/60 font-medium transition-colors">
                               {item.desc}
                             </p>
                           </div>
@@ -600,57 +603,57 @@ export default function App() {
 
                   {/* Clean footer step alignment line */}
                   <div className="text-center pt-2">
-                    <p className="inline-flex items-center justify-center space-x-2 text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-150 px-5 py-2.5 rounded-full shadow-2xs">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <p className="inline-flex items-center justify-center space-x-2 text-xs sm:text-sm font-semibold text-ink bg-white border border-hairline px-5 py-2.5 rounded-full">
+                      <span className="w-2 h-2 rounded-full bg-verify animate-pulse" />
                       <span>Pronto! Após a conclusão dessas etapas, seu Certificado Digital estará ativo e pronto para uso.</span>
                     </p>
                   </div>
 
                   {/* VIDEOCONFERENCIA CRITERIA AND PROCESS - HIGHLIGHT BANNER */}
-                  <div className="bg-white rounded-3xl border border-slate-200/80 p-6 md:p-8 shadow-xs max-w-4xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                    <div className="md:col-span-3 flex flex-col items-center justify-center text-center p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/50">
-                      <div className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center mb-2 shadow-sm">
+                  <div className="bg-white rounded-sm border border-hairline p-6 md:p-8 max-w-4xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <div className="md:col-span-3 flex flex-col items-center justify-center text-center p-5 bg-seal/5 rounded-sm border border-seal/20">
+                      <div className="w-12 h-12 rounded-full bg-seal text-white flex items-center justify-center mb-2">
                         <Video className="w-5 h-5" />
                       </div>
-                      <span className="text-xs font-bold text-indigo-900 uppercase tracking-widest block">Videoconferência</span>
-                      <span className="text-[10px] text-indigo-600 font-bold block mt-1">100% Online</span>
+                      <span className="text-xs font-bold text-ink uppercase tracking-widest block">Videoconferência</span>
+                      <span className="text-[10px] text-seal font-bold block mt-1">100% Online</span>
                     </div>
 
                     <div className="md:col-span-9 space-y-4">
-                      <h4 className="text-base font-bold text-slate-800 flex items-center space-x-2">
-                        <span className="w-2 h-2 rounded-full bg-indigo-600 inline-block" />
+                      <h4 className="text-base font-bold text-ink flex items-center space-x-2">
+                        <span className="w-2 h-2 rounded-full bg-seal inline-block" />
                         <span>Requisitos e Passo a Passo do Vídeo</span>
                       </h4>
-                      
-                      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        <p className="bg-indigo-50/30 border-l-4 border-indigo-600 p-3 rounded-r-xl text-slate-700 font-medium">
+
+                      <div className="space-y-3 text-xs sm:text-sm text-ink/70 leading-relaxed">
+                        <p className="bg-seal/5 border-l-4 border-seal p-3 text-ink font-medium">
                           <strong>Critérios de Aptidão:</strong> Para emitir seu certificado por videoconferência você deve atender a um desses 2 critérios: <strong>Ter CNH</strong> ou <strong>já ter feito certificado</strong>. Seguindo algum desses critérios você está apto.
                         </p>
-                        
-                        <div className="space-y-2 pt-1 border-t border-slate-100">
-                          <h5 className="font-bold text-slate-800 text-xs uppercase tracking-wide">Como é o processo do vídeo? É bem simples:</h5>
-                          <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-1 text-[11px] text-slate-500">
+
+                        <div className="space-y-2 pt-1 border-t border-hairline">
+                          <h5 className="font-bold text-ink text-xs uppercase tracking-wide">Como é o processo do vídeo? É bem simples:</h5>
+                          <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-1 text-[11px] text-ink/60">
                             <li className="flex items-start space-x-2">
-                              <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">1</span>
+                              <span className="w-5 h-5 rounded-full bg-parchment text-ink flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">1</span>
                               <span>Após o cadastro, enviamos um link para você acessar a sala da videoconferência.</span>
                             </li>
                             <li className="flex items-start space-x-2">
-                              <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">2</span>
+                              <span className="w-5 h-5 rounded-full bg-parchment text-ink flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">2</span>
                               <span>Após seu acesso à sala, tiramos sua foto e iniciamos a gravação.</span>
                             </li>
                             <li className="flex items-start space-x-2">
-                              <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">3</span>
+                              <span className="w-5 h-5 rounded-full bg-parchment text-ink flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">3</span>
                               <span>No vídeo, nosso atendente faz algumas simples perguntas obrigatórias.</span>
                             </li>
                             <li className="flex items-start space-x-2">
-                              <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">4</span>
+                              <span className="w-5 h-5 rounded-full bg-parchment text-ink flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">4</span>
                               <span>Após as respostas, encerramos a gravação. Pronto, seu processo de emissão foi concluído!</span>
                             </li>
                           </ol>
                         </div>
-                        
-                        <p className="text-[11px] font-semibold text-indigo-600 flex items-center space-x-1.5 pt-2">
-                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+
+                        <p className="text-[11px] font-semibold text-seal flex items-center space-x-1.5 pt-2">
+                          <ShieldCheck className="w-3.5 h-3.5 text-verify" />
                           <span>Mais praticidade para você com a mesma segurança!</span>
                         </p>
                       </div>
@@ -662,36 +665,35 @@ export default function App() {
               {/* PRODUCT PRICING MATRIX GRAPHICS */}
               <section id="pricing-anchored" className="max-w-7xl mx-auto px-4 py-16 space-y-10">
                 <div className="text-center space-y-4">
-                  <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest block">Preços Transparentes</span>
-                  <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-800">
+                  <h3 className="text-2xl sm:text-3xl font-display font-semibold text-ink">
                     Escolha a melhor opção para você ou sua empresa
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+                  <p className="text-xs sm:text-sm text-ink/60 max-w-sm mx-auto leading-relaxed">
                     Sem letras miúdas. Sem surpresas ou taxas ocultas. Apenas o melhor custo-benefício de Curitiba.
                   </p>
 
                   {/* Filter switches */}
-                  <div className="inline-flex bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+                  <div className="inline-flex bg-white p-1.5 rounded-sm border border-hairline">
                     <button
                       onClick={() => setPricingFilter('all')}
-                      className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition ${
-                        pricingFilter === 'all' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                      className={`px-4 py-1.5 text-xs font-semibold rounded-sm transition ${
+                        pricingFilter === 'all' ? 'bg-seal text-white' : 'text-ink/60 hover:text-ink'
                       }`}
                     >
                       Ver Todos
                     </button>
                     <button
                       onClick={() => setPricingFilter('ecpf')}
-                      className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition ${
-                        pricingFilter === 'ecpf' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                      className={`px-4 py-1.5 text-xs font-semibold rounded-sm transition ${
+                        pricingFilter === 'ecpf' ? 'bg-seal text-white' : 'text-ink/60 hover:text-ink'
                       }`}
                     >
                       Pessoa Física (e-CPF)
                     </button>
                     <button
                       onClick={() => setPricingFilter('ecnpj')}
-                      className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition ${
-                        pricingFilter === 'ecnpj' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                      className={`px-4 py-1.5 text-xs font-semibold rounded-sm transition ${
+                        pricingFilter === 'ecnpj' ? 'bg-seal text-white' : 'text-ink/60 hover:text-ink'
                       }`}
                     >
                       Pessoa Jurídica (e-CNPJ)
@@ -703,10 +705,10 @@ export default function App() {
                   {filteredPlans.map((plan) => (
                     <div
                       key={plan.title}
-                      className={`bg-white rounded-3xl p-6 flex flex-col justify-between transition-all relative overflow-hidden group ${
+                      className={`bg-white rounded-sm p-6 flex flex-col justify-between transition-all relative overflow-hidden group ${
                         plan.featured
-                          ? 'border-2 border-indigo-600 shadow-xl shadow-indigo-600/10 md:-translate-y-2 ring-4 ring-indigo-600/10'
-                          : 'border border-slate-150 hover:shadow-lg hover:border-slate-300'
+                          ? 'border-2 border-seal md:-translate-y-2'
+                          : 'border border-hairline hover:border-seal/50'
                       }`}
                     >
                       {/* Top ribbon if recommended */}
@@ -714,8 +716,8 @@ export default function App() {
                         <div className="absolute top-3 right-3">
                           <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
                             plan.featured
-                              ? 'bg-indigo-600 text-white border border-indigo-600 shadow-sm'
-                              : 'bg-indigo-50 text-indigo-600 border border-indigo-200/40'
+                              ? 'bg-seal text-white border border-seal'
+                              : 'bg-seal/10 text-seal border border-seal/20'
                           }`}>
                             {plan.badge}
                           </span>
@@ -724,22 +726,22 @@ export default function App() {
 
                       <div className="space-y-4">
                         <div className="space-y-1">
-                          <span className="text-[10px] font-bold uppercase text-slate-400 font-mono tracking-wider">{plan.duration}</span>
-                          <h4 className="text-lg font-bold text-slate-800">{plan.title}</h4>
-                        </div>
-                        
-                        <p className="text-xs text-slate-400 leading-normal min-h-[64px]">{plan.desc}</p>
-                        
-                        <div className="py-2.5 border-y border-slate-100 flex items-baseline space-x-1.5">
-                          <span className="text-xs font-bold text-slate-400 uppercase select-none">R$</span>
-                          <span className="text-3xl font-display font-extrabold text-slate-800">{plan.price}</span>
-                          <span className="text-xs text-slate-500 font-medium">/ emissão</span>
+                          <span className="text-[10px] font-bold uppercase text-ink/40 font-mono tracking-wider">{plan.duration}</span>
+                          <h4 className="text-lg font-bold text-ink">{plan.title}</h4>
                         </div>
 
-                        <ul className="space-y-2 text-slate-600 font-sans text-xs min-h-[140px] pt-2" role="list">
+                        <p className="text-xs text-ink/50 leading-normal min-h-[64px]">{plan.desc}</p>
+
+                        <div className="py-2.5 border-y border-hairline flex items-baseline space-x-1.5">
+                          <span className="text-xs font-bold text-ink/50 uppercase select-none">R$</span>
+                          <span className="text-3xl font-display font-semibold text-ink">{plan.price}</span>
+                          <span className="text-xs text-ink/50 font-medium">/ emissão</span>
+                        </div>
+
+                        <ul className="space-y-2 text-ink/70 font-sans text-xs min-h-[140px] pt-2" role="list">
                           {plan.features.map((feat, i) => (
                             <li key={i} className="flex items-start space-x-1.5">
-                              <span className="p-0.5 rounded-full bg-emerald-50 text-emerald-600 shrink-0 mt-0.5">
+                              <span className="p-0.5 rounded-full bg-verify/10 text-verify shrink-0 mt-0.5">
                                 <CheckCircle className="w-3.5 h-3.5" />
                               </span>
                               <span>{feat}</span>
@@ -753,17 +755,17 @@ export default function App() {
                           href={`${plan.whatsappLink}`}
                           target="_blank"
                           referrerPolicy="no-referrer"
-                          className="w-full bg-slate-900 group-hover:bg-indigo-600 text-white text-center font-bold text-xs py-2.5 px-3 rounded-xl shadow-md hover:shadow-indigo-600/10 block leading-tight transition"
+                          className="w-full bg-ink group-hover:bg-seal text-white text-center font-bold text-xs py-2.5 px-3 rounded-sm block leading-tight transition"
                         >
                           Iniciar Atendimento Online
                         </a>
                         <button
                           type="button"
                           onClick={() => { trackPixelEvent('InitiateCheckout'); setPaymentPlan(plan); }}
-                          className={`w-full text-center font-bold text-xs py-2.5 px-3 rounded-xl transition ${
+                          className={`w-full text-center font-bold text-xs py-2.5 px-3 rounded-sm transition ${
                             plan.featured
-                              ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 border border-indigo-600'
-                              : 'bg-white border border-slate-200 hover:border-indigo-600 hover:text-indigo-700 text-slate-600'
+                              ? 'bg-seal hover:bg-seal-light text-white hover:text-ink border border-seal'
+                              : 'bg-white border border-hairline hover:border-seal hover:text-seal text-ink/70'
                           }`}
                         >
                           Solicitar Meu Certificado
@@ -775,41 +777,40 @@ export default function App() {
               </section>
 
               {/* CURITIBA LOCALITY / MAP OVERVIEW */}
-              <section className="bg-slate-100/60 border-y border-slate-250/50 py-16">
+              <section className="bg-white border-y border-hairline py-16">
                 <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
                   <div className="md:col-span-7 space-y-5">
-                    <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest block font-mono">Liderança em Curitiba (CWB)</span>
-                    <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-850 tracking-tight text-slate-800">
+                    <h3 className="text-2xl sm:text-3xl font-display font-semibold text-ink tracking-tight">
                       Emitimos Chaves Digitais Oficiais em Curitiba, Paraná e no Conforto do Seu Lar
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-xl">
+                    <p className="text-xs sm:text-sm text-ink/60 leading-relaxed max-w-xl">
                       Nascemos em Curitiba com o intuito de apoiar o ecossistema local de pequenas e médias empresas, comerciantes, contadores parceiros, cartórios de registro civil, imobiliárias e profissionais jurídicos.
                     </p>
-                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-xl">
+                    <p className="text-xs sm:text-sm text-ink/60 leading-relaxed max-w-xl">
                       Nossas emissões via videochamada são auditadas, seguras e possuem o aval regulamentar do ICP-Brasil, sendo aceitas em qualquer órgão federal, estadual ou prefeitura do país.
                     </p>
 
-                    <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-700 pt-3">
+                    <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-ink pt-3">
                       <div className="flex items-center space-x-2">
-                        <MapPin className="w-4 h-4 text-indigo-600" />
+                        <MapPin className="w-4 h-4 text-seal" />
                         <span>Curitiba e Região Metropolitana</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Cpu className="w-4 h-4 text-indigo-600" />
+                        <Cpu className="w-4 h-4 text-seal" />
                         <span>Servidores Criptográficos Rápidos</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="md:col-span-5 bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
-                    <h4 className="font-bold text-sm text-slate-800">Cotação Instantânea / Retorno Rápido</h4>
-                    <p className="text-[11px] text-slate-400">Preencha seus contatos e fale com o suporte humanizado em menos de 3 minutos!</p>
+                  <div className="md:col-span-5 bg-parchment p-5 rounded-sm border border-hairline space-y-4">
+                    <h4 className="font-bold text-sm text-ink">Cotação Instantânea / Retorno Rápido</h4>
+                    <p className="text-[11px] text-ink/50">Preencha seus contatos e fale com o suporte humanizado em menos de 3 minutos!</p>
 
                     {leadSuccess ? (
-                      <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl border border-emerald-200 text-center space-y-2 animate-fade-in">
-                        <CheckCircle className="w-8 h-8 mx-auto text-emerald-600" />
+                      <div className="bg-verify/10 text-verify p-4 rounded-sm border border-verify/30 text-center space-y-2 animate-fade-in">
+                        <CheckCircle className="w-8 h-8 mx-auto text-verify" />
                         <h5 className="font-bold text-xs">Cotação Enviada!</h5>
-                        <p className="text-[10px] text-emerald-700">Um consultor experiente entrará em contato via WhatsApp/E-mail.</p>
+                        <p className="text-[10px] text-verify/90">Um consultor experiente entrará em contato via WhatsApp/E-mail.</p>
                         {leadError && (
                           <p className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2">{leadError}</p>
                         )}
@@ -817,7 +818,7 @@ export default function App() {
                           href={`https://wa.me/5541992447846?text=Olá!%20Enviei%20minha%20solicitação%20no%20site%20certificadocwb.com.br%20como%20${encodeURIComponent(leadForm.name)}.%20Gostaria%20de%20receber%20atendimento%20prioritário%20para%20as%20etapas%20de%20emissão%20do%20meu%20certificado%20digital.`}
                           target="_blank"
                           referrerPolicy="no-referrer"
-                          className="inline-flex items-center space-x-1 py-1.5 px-3 bg-emerald-600 hover:bg-emerald-750 text-white rounded-lg text-[10px] font-bold pt-1.5"
+                          className="inline-flex items-center space-x-1 py-1.5 px-3 bg-verify hover:bg-verify/90 text-white rounded-sm text-[10px] font-bold pt-1.5"
                         >
                           <Phone className="w-3.5 h-3.5" />
                           <span>Falar Agora no WhatsApp</span>
@@ -826,38 +827,42 @@ export default function App() {
                     ) : (
                       <form onSubmit={handleLeadSubmit} className="space-y-3.5">
                         <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="lead-name">Seu Nome / Empresa</label>
+                          <label className="text-[10px] font-bold text-ink/50 block uppercase" htmlFor="lead-name">Seu Nome / Empresa</label>
                           <input
                             id="lead-name"
+                            name="name"
                             type="text"
                             required
+                            autoComplete="name"
                             placeholder="Ex. Mercado Novo"
                             value={leadForm.name}
                             onChange={e => setLeadForm({...leadForm, name: e.target.value})}
-                            className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-xs"
+                            className="w-full bg-white border border-hairline focus:outline-none focus:border-seal rounded-sm p-2 text-xs"
                           />
                         </div>
 
                         <div className="grid grid-cols-2 gap-3">
                           <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="lead-phone">WhatsApp</label>
+                            <label className="text-[10px] font-bold text-ink/50 block uppercase" htmlFor="lead-phone">WhatsApp</label>
                             <input
                               id="lead-phone"
+                              name="phone"
                               type="tel"
                               required
+                              autoComplete="tel"
                               placeholder="(41) 99244-7846"
                               value={leadForm.phone}
                               onChange={e => setLeadForm({...leadForm, phone: e.target.value})}
-                              className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-xs font-mono"
+                              className="w-full bg-white border border-hairline focus:outline-none focus:border-seal rounded-sm p-2 text-xs font-mono"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-slate-400 block uppercase" htmlFor="lead-interest">Interesse</label>
+                            <label className="text-[10px] font-bold text-ink/50 block uppercase" htmlFor="lead-interest">Interesse</label>
                             <select
                               id="lead-interest"
                               value={leadForm.interestType}
                               onChange={e => setLeadForm({...leadForm, interestType: e.target.value as any})}
-                              className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-indigo-600 rounded-lg p-2 text-xs text-slate-700"
+                              className="w-full bg-white border border-hairline focus:outline-none focus:border-seal rounded-sm p-2 text-xs text-ink"
                             >
                               <option value="general">Assuntos Gerais</option>
                               <option value="ecpf_a1">e-CPF A1 Digital</option>
@@ -872,9 +877,9 @@ export default function App() {
                           id="btn-lead-submit"
                           type="submit"
                           disabled={leadSubmitting}
-                          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-sm transition disabled:opacity-60"
+                          className="w-full bg-seal hover:bg-seal-light text-white hover:text-ink font-bold text-xs py-2 px-3 rounded-sm transition disabled:opacity-60"
                         >
-                          {leadSubmitting ? 'Enviando...' : 'Solicitar Atendimento'}
+                          {leadSubmitting ? 'Enviando…' : 'Solicitar Atendimento'}
                         </button>
                       </form>
                     )}
@@ -885,11 +890,10 @@ export default function App() {
               {/* TESTIMONIALS */}
               <section className="max-w-7xl mx-auto px-4 py-16 space-y-10">
                 <div className="text-center space-y-3">
-                  <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest block font-mono">Comunidade Local</span>
-                  <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-800">
+                  <h3 className="text-2xl sm:text-3xl font-display font-semibold text-ink">
                     O que dizem os contadores e empresários em Curitiba
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+                  <p className="text-xs sm:text-sm text-ink/60 max-w-sm mx-auto leading-relaxed">
                     Centenas de clientes já emitiram seus certificados digitais com a Certificado CWB.
                   </p>
                 </div>
@@ -900,15 +904,15 @@ export default function App() {
                     { text: 'Precisava de um e-CNPJ com urgência para emitir notas fiscais em lote no sábado de manhã. Fui atendido de imediato pelas chaves digitais online e meu faturamento não parou de rodar. Show de bola.', name: 'Roberto Castilho', role: 'Fundador / Dev', company: 'Sul Sistemas e-Commerce' },
                     { text: 'Meu e-CPF A3 chegou fisicamente rápido e o suporte me ajudou em toda a instalação do token para assinar contratos imobiliários em nosso escritório de advocacia. Excelente agilidade.', name: 'Mariana Requião', role: 'Advogada Licenciada', company: 'Requião Advocacia Integrada' }
                   ].map((t, i) => (
-                    <div key={i} className="bg-white p-6 rounded-2xl border border-slate-100 space-y-4 shadow-sm hover:translate-y-[-2px] transition-transform">
-                      <div className="flex items-center space-x-1.5 text-amber-500">
-                        <ThumbsUp className="w-4 h-4 text-indigo-500" />
-                        <span className="text-[10px] text-slate-400 font-bold uppercase font-mono">Indicação 100%</span>
+                    <div key={i} className="bg-white p-6 rounded-sm border border-hairline space-y-4 transition-transform">
+                      <div className="flex items-center space-x-1.5">
+                        <ThumbsUp className="w-4 h-4 text-seal" />
+                        <span className="text-[10px] text-ink/40 font-bold uppercase font-mono">Indicação 100%</span>
                       </div>
-                      <p className="text-xs text-slate-500 leading-relaxed italic">"{t.text}"</p>
-                      <div className="border-t border-slate-50 pt-3">
-                        <strong className="block text-xs text-slate-800">{t.name}</strong>
-                        <span className="text-[10px] text-slate-400 block">{t.role} — {t.company}</span>
+                      <p className="text-xs text-ink/60 leading-relaxed italic">"{t.text}"</p>
+                      <div className="border-t border-hairline pt-3">
+                        <strong className="block text-xs text-ink">{t.name}</strong>
+                        <span className="text-[10px] text-ink/40 block">{t.role} — {t.company}</span>
                       </div>
                     </div>
                   ))}
@@ -916,32 +920,32 @@ export default function App() {
               </section>
 
               {/* FAQ CONTAINER ACCORDIONS */}
-              <section className="bg-slate-900 border-t border-slate-800 text-white py-16">
+              <section className="bg-ink border-t border-black/20 text-parchment py-16">
                 <div className="max-w-4xl mx-auto px-4 space-y-10">
                   <div className="text-center space-y-3">
-                    <HelpCircle className="w-8 h-8 mx-auto text-indigo-400" />
-                    <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white">
+                    <HelpCircle className="w-8 h-8 mx-auto text-seal-light" />
+                    <h3 className="text-2xl sm:text-3xl font-display font-semibold text-parchment">
                       Perguntas Frequentes
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-400">
+                    <p className="text-xs sm:text-sm text-parchment/60">
                       Entenda rapidamente as regras e facilidades da assinatura eletrônica nacional.
                     </p>
                   </div>
 
                   <div className="space-y-4" role="tablist">
                     {FAQS.map((faq, i) => (
-                      <div key={i} className="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden">
+                      <div key={i} className="bg-ink-light rounded-sm border border-black/20 overflow-hidden">
                         <button
                           type="button"
                           onClick={() => setExpandedFaqIndex(expandedFaqIndex === i ? null : i)}
                           className="w-full flex justify-between items-center p-5 text-left text-xs sm:text-sm font-bold antialiased select-none"
                         >
                           <span>{faq.q}</span>
-                          <ChevronDown className={`w-4 h-4 text-indigo-400 transition-transform duration-300 ${expandedFaqIndex === i ? 'rotate-180' : ''}`} />
+                          <ChevronDown className={`w-4 h-4 text-seal-light transition-transform duration-300 ${expandedFaqIndex === i ? 'rotate-180' : ''}`} />
                         </button>
-                        
-                        <div className={`transition-all duration-300 overflow-hidden ${expandedFaqIndex === i ? 'max-h-[300px] border-t border-slate-900' : 'max-h-0'}`}>
-                          <p className="p-5 text-xs text-slate-400 leading-relaxed">{faq.a}</p>
+
+                        <div className={`transition-all duration-300 overflow-hidden ${expandedFaqIndex === i ? 'max-h-[300px] border-t border-black/20' : 'max-h-0'}`}>
+                          <p className="p-5 text-xs text-parchment/60 leading-relaxed">{faq.a}</p>
                         </div>
                       </div>
                     ))}
@@ -949,12 +953,12 @@ export default function App() {
 
                   {/* FAQ CTA */}
                   <div className="text-center pt-4">
-                    <p className="text-xs text-slate-400 mb-2">Ainda tem alguma dúvida técnica sobre chaves de acesso?</p>
+                    <p className="text-xs text-parchment/60 mb-2">Ainda tem alguma dúvida técnica sobre chaves de acesso?</p>
                     <a
                       href="https://wa.me/5541992447846?text=Olá!%20Acessei%20o%20site%20certificadocwb.com.br%20e%20gostaria%20de%20esclarecer%20uma%20dúvida%20técnica%20sobre%20a%20emissão%20de%20certificado%20digital.%20Podem%20me%20ajudar%3F"
                       target="_blank"
                       referrerPolicy="no-referrer"
-                      className="inline-flex items-center space-x-1.5 text-indigo-400 hover:text-indigo-300 font-bold text-xs"
+                      className="inline-flex items-center space-x-1.5 text-seal-light hover:text-seal font-bold text-xs"
                     >
                       <span>Falar com nosso especialista agora</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -965,8 +969,8 @@ export default function App() {
 
               {/* COMPLIANCE ICP-BRASIL LOGOS */}
               <section className="pb-16 pt-10 text-center select-none opacity-60">
-                <span className="text-[10px] text-slate-400 block font-bold tracking-widest uppercase mb-3">AUTORIDADES PARCEIRAS & TECNOLOGIA</span>
-                <div className="flex flex-wrap items-center justify-center gap-6 text-slate-500 font-mono text-[10px]">
+                <span className="text-[10px] text-ink/40 block font-bold tracking-widest uppercase mb-3">AUTORIDADES PARCEIRAS & TECNOLOGIA</span>
+                <div className="flex flex-wrap items-center justify-center gap-6 text-ink/50 font-mono text-[10px]">
                   <span>● RECEITA FEDERAL BRASIL</span>
                   <span>● ITI ICP-BRASIL</span>
                   <span>● ASSINATURAS GOV.BR</span>
@@ -986,21 +990,21 @@ export default function App() {
               className="max-w-5xl mx-auto px-4 py-8 space-y-8"
             >
               <div className="text-center space-y-3">
-                <BookOpen className="w-8 h-8 mx-auto text-indigo-500" />
-                <h2 className="text-2xl font-display font-extrabold text-slate-800">
+                <BookOpen className="w-8 h-8 mx-auto text-seal" />
+                <h2 className="text-2xl font-display font-semibold text-ink">
                   Central de Suporte & Blog Informativo
                 </h2>
-                <p className="text-xs text-slate-500 max-w-md mx-auto">
+                <p className="text-xs text-ink/60 max-w-md mx-auto">
                   Dicas essenciais sobre conformidade digital, notas fiscais eletrônicas e novidades em legislação da ICP-Brasil.
                 </p>
               </div>
 
               {activeArticle ? (
                 /* Detail Modal view of Article */
-                <article className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm space-y-5 animate-fade-in text-slate-700">
+                <article className="bg-white rounded-sm p-6 sm:p-8 border border-hairline space-y-5 animate-fade-in text-ink/70">
                   <button
                     onClick={() => setActiveArticle(null)}
-                    className="text-xs text-indigo-600 font-bold hover:underline mb-2 block"
+                    className="text-xs text-seal font-bold hover:underline mb-2 block"
                   >
                     ← Voltar para listagem de artigos
                   </button>
@@ -1011,28 +1015,28 @@ export default function App() {
                     width={800}
                     height={256}
                     referrerPolicy="no-referrer"
-                    className="w-full h-64 object-cover rounded-2xl border"
+                    className="w-full h-64 object-cover rounded-sm border border-hairline"
                   />
 
-                  <div className="flex items-center space-x-4 text-xs text-slate-400 font-mono">
-                    <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-sans">{activeArticle.category}</span>
+                  <div className="flex items-center space-x-4 text-xs text-ink/40 font-mono">
+                    <span className="bg-parchment text-ink/70 px-2 py-0.5 rounded font-sans">{activeArticle.category}</span>
                     <span>{activeArticle.publishDate}</span>
                     <span>{activeArticle.readingTime}</span>
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-display font-bold text-slate-800 leading-tight">
+                  <h3 className="text-xl sm:text-2xl font-display font-semibold text-ink leading-tight">
                     {activeArticle.title}
                   </h3>
 
-                  <div className="text-xs sm:text-sm leading-relaxed space-y-4 pt-4 border-t border-slate-50 text-slate-600 whitespace-pre-line font-sans">
+                  <div className="text-xs sm:text-sm leading-relaxed space-y-4 pt-4 border-t border-hairline text-ink/70 whitespace-pre-line font-sans">
                     {activeArticle.content}
                   </div>
 
-                  <div className="pt-6 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span className="text-slate-400">Gostou deste artigo? Compartilhe Curiosidades Contábeis</span>
+                  <div className="pt-6 border-t border-hairline flex justify-between items-center text-xs">
+                    <span className="text-ink/40">Gostou deste artigo? Compartilhe Curiosidades Contábeis</span>
                     <button
                       onClick={() => alert('Link copiado para área de transferência!')}
-                      className="text-indigo-600 font-bold hover:underline flex items-center space-x-1"
+                      className="text-seal font-bold hover:underline flex items-center space-x-1"
                     >
                       <Share2 className="w-3.5 h-3.5" />
                       <span>Copiar Link</span>
@@ -1049,7 +1053,7 @@ export default function App() {
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveArticle(art); } }}
-                      className="bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-slate-250 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                      className="bg-white rounded-sm overflow-hidden border border-hairline hover:border-seal/50 transition-all cursor-pointer flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-seal"
                     >
                       <img
                         src={art.coverImage}
@@ -1058,24 +1062,24 @@ export default function App() {
                         height={176}
                         loading="lazy"
                         referrerPolicy="no-referrer"
-                        className="w-full h-44 object-cover border-b"
+                        className="w-full h-44 object-cover border-b border-hairline"
                       />
                       <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
                         <div className="space-y-2">
-                          <div className="flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                            <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-sans">{art.category}</span>
+                          <div className="flex justify-between items-center text-[10px] text-ink/40 font-mono">
+                            <span className="bg-parchment text-ink/70 px-2 py-0.5 rounded font-sans">{art.category}</span>
                             <span>{art.publishDate}</span>
                           </div>
-                          <h4 className="text-xs sm:text-sm font-bold text-slate-800 leading-snug line-clamp-2">
+                          <h4 className="text-xs sm:text-sm font-bold text-ink leading-snug line-clamp-2">
                             {art.title}
                           </h4>
-                          <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-3">
+                          <p className="text-[11px] text-ink/50 leading-relaxed line-clamp-3">
                             {art.excerpt}
                           </p>
                         </div>
 
-                        <div className="pt-4 border-t border-slate-50 text-right">
-                          <span className="text-xs font-bold text-indigo-600 inline-flex items-center space-x-0.5 hover:underline">
+                        <div className="pt-4 border-t border-hairline text-right">
+                          <span className="text-xs font-bold text-seal inline-flex items-center space-x-0.5 hover:underline">
                             <span>Ler Artigo Integral</span>
                             <ChevronRight className="w-3.5 h-3.5" />
                           </span>
@@ -1119,19 +1123,19 @@ export default function App() {
         </AnimatePresence>
 
         {/* FOOTER SECTION */}
-        <footer className="bg-slate-950 text-white pt-14 pb-8 border-t border-slate-900 font-sans">
+        <footer className="bg-ink text-parchment pt-14 pb-8 border-t border-black/20 font-sans">
           <div className="max-w-7xl mx-auto px-4 space-y-10">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-slate-900">
-              
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-black/20">
+
               {/* Col Left Brand info */}
               <div className="md:col-span-5 space-y-4 text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start space-x-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-sm bg-seal flex items-center justify-center">
                     <ShieldCheck className="w-5 h-5 text-white" />
                   </div>
-                  <strong className="text-lg font-display font-bold uppercase tracking-tight">CERTIFICADO DIGITAL</strong>
+                  <strong className="text-lg font-display font-semibold uppercase tracking-tight">CERTIFICADO DIGITAL</strong>
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
+                <p className="text-xs text-parchment/60 leading-relaxed max-w-sm">
                   Proporcionamos segurança jurídica, criptografia oficial, emissão ágil por videoconferência em todo o território nacional. Conectamos você ao Brasil inteiro de forma 100% digital.
                 </p>
               </div>
@@ -1139,43 +1143,43 @@ export default function App() {
               {/* Col Middle Links */}
               <div className="md:col-span-4 grid grid-cols-2 gap-4 text-xs">
                 <div className="space-y-2">
-                  <span className="block text-slate-500 font-bold uppercase tracking-wider text-[10px]">Portal</span>
-                  <ul className="space-y-1.5 text-slate-400">
-                    <li><button onClick={() => setActiveTab('home')} className="hover:text-white">Início</button></li>
+                  <span className="block text-parchment/40 font-bold uppercase tracking-wider text-[10px]">Portal</span>
+                  <ul className="space-y-1.5 text-parchment/60">
+                    <li><button onClick={() => setActiveTab('home')} className="hover:text-parchment">Início</button></li>
                   </ul>
                 </div>
                 <div className="space-y-2">
-                  <span className="block text-slate-500 font-bold uppercase tracking-wider text-[10px]">Novidades</span>
-                  <ul className="space-y-1.5 text-slate-400">
-                    <li><button onClick={() => setActiveTab('blog')} className="hover:text-white">Blog de Ajuda</button></li>
-                    <li><a href="https://wa.me/5541992447846" target="_blank" rel="noreferrer" className="hover:text-white">Atendimento</a></li>
+                  <span className="block text-parchment/40 font-bold uppercase tracking-wider text-[10px]">Novidades</span>
+                  <ul className="space-y-1.5 text-parchment/60">
+                    <li><button onClick={() => setActiveTab('blog')} className="hover:text-parchment">Blog de Ajuda</button></li>
+                    <li><a href="https://wa.me/5541992447846" target="_blank" rel="noreferrer" className="hover:text-parchment">Atendimento</a></li>
                   </ul>
                 </div>
               </div>
 
               {/* Col Right Contacts info */}
               <div className="md:col-span-3 space-y-4 text-xs">
-                <span className="block text-slate-500 font-bold uppercase tracking-wider text-[10px] text-center md:text-left">Canais de Contato</span>
-                <ul className="space-y-2.5 text-slate-400 font-sans">
+                <span className="block text-parchment/40 font-bold uppercase tracking-wider text-[10px] text-center md:text-left">Canais de Contato</span>
+                <ul className="space-y-2.5 text-parchment/60 font-sans">
                   <li className="flex items-center space-x-2 justify-center md:justify-start">
-                    <Phone className="w-4 h-4 text-indigo-400 shrink-0" />
-                    <a href="https://wa.me/5541992447846" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                    <Phone className="w-4 h-4 text-seal-light shrink-0" />
+                    <a href="https://wa.me/5541992447846" target="_blank" rel="noreferrer" className="hover:text-parchment transition-colors">
                       (41) 99244-7846 (WhatsApp)
                     </a>
                   </li>
                   <li className="flex items-center space-x-2 justify-center md:justify-start">
-                    <Mail className="w-4 h-4 text-indigo-400 shrink-0" />
-                    <a href="mailto:cwbcertificado@gmail.com" className="hover:text-white transition-colors">
+                    <Mail className="w-4 h-4 text-seal-light shrink-0" />
+                    <a href="mailto:cwbcertificado@gmail.com" className="hover:text-parchment transition-colors">
                       cwbcertificado@gmail.com
                     </a>
                   </li>
                   <li className="flex items-center space-x-2 justify-center md:justify-start">
-                    <MapPin className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <MapPin className="w-4 h-4 text-seal-light shrink-0" />
                     <span>Curitiba, Paraná — Brasil</span>
                   </li>
                   <li className="flex items-center space-x-2 justify-center md:justify-start">
-                    <Instagram className="w-4 h-4 text-indigo-400 shrink-0" />
-                    <a href="https://www.instagram.com/cwbcertificadodigital" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                    <Instagram className="w-4 h-4 text-seal-light shrink-0" />
+                    <a href="https://www.instagram.com/cwbcertificadodigital" target="_blank" rel="noreferrer" className="hover:text-parchment transition-colors">
                       @cwbcertificadodigital
                     </a>
                   </li>
@@ -1184,22 +1188,22 @@ export default function App() {
             </div>
 
             {/* Bottom compliance line */}
-            <div className="flex flex-col sm:flex-row justify-between items-center text-[10px] text-slate-400 gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-center text-[10px] text-parchment/60 gap-4">
               <div className="space-y-1 text-center sm:text-left leading-normal">
                 <span>CERTIFICADO DIGITAL © 2026. Todos os direitos reservados.</span>
-                <p className="text-[9px] text-slate-500">
+                <p className="text-[9px] text-parchment/40">
                   A CERTIFICADO DIGITAL realiza suporte e encaminhamento. Todas as validações por videochamada são auditadas de acordo com as diretrizes do Instituto Nacional de Tecnologia da Informação (ITI) e ICP-Brasil.
                 </p>
               </div>
 
-              <div className="flex items-center space-x-3 text-slate-500 shrink-0">
+              <div className="flex items-center space-x-3 text-parchment/40 shrink-0">
                 <span>Políticas de Privacidade</span>
                 <span>•</span>
                 <span>Termos de Uso</span>
                 <button
                   onClick={() => setActiveTab('history')}
                   aria-label="Acesso interno"
-                  className="text-slate-800 hover:text-slate-500 transition-colors"
+                  className="text-ink-light hover:text-parchment/40 transition-colors"
                 >
                   <Lock className="w-2.5 h-2.5" />
                 </button>

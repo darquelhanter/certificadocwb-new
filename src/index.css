@@ -1,14 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-display: "Fraunces", "Inter", serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  
+
   --color-[#0f172a]: #0f172a;
   --color-brand-primary: #4f46e5;
   --color-brand-success: #10b981;
+
+  /* Certificate identity — evokes an official issued document, not generic SaaS */
+  --color-ink: #14213d;
+  --color-ink-light: #1f2f52;
+  --color-parchment: #f7f3e9;
+  /* seal: darker gold, meets 4.5:1 as text-on-light or white-text-on-bg.
+     seal-light: lighter gold, meets 4.5:1 only as ink-text-on-bg (dark
+     surfaces) — never pair seal-light background with white text. */
+  --color-seal: #8c6118;
+  --color-seal-light: #c99a3d;
+  --color-verify: #1f6f54;
+  --color-hairline: #d8cbb0;
 }
 
 @layer utilities {
