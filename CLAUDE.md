@@ -68,6 +68,7 @@ Conteúdo que precisa ser mantido igual em 3 lugares: **documentos exigidos** (`
 - **Resend**: domínio `certificadocwb.com.br` verificado (DKIM/SPF/DMARC no Registro.br). Remetente `Certificado CWB <pagamentos@certificadocwb.com.br>`; e-mail do admin `cwbcertificado@gmail.com`.
 - **Meta**: Pixel `1036956412492940` (PageView, Lead, InitiateCheckout no navegador; Purchase pelo servidor via Conversions API assim que houver token).
 - **Google Ads** (conta de `darquelhanter1@gmail.com`, pré-pago por Pix): tag base `AW-18445597087` no `index.html`; conversão "Enviar formulário de lead" disparada no envio do formulário.
+- **Google Analytics 4** (conta "Hantech" → propriedade "Certificado CWB", Measurement ID `G-1CDDGTST87`, mesmo `gtag.js` do `index.html`): criado e vinculado à conta do Google Ads (482-391-7499) em 2026-09-28. Leva até 24h pra dados cruzados aparecerem.
 - **Instagram**: https://www.instagram.com/cwbcertificadodigital
 
 ## Identidade visual (redesenhada em 2026-09-16)
@@ -92,6 +93,7 @@ e-CPF A1 R$99,90 · e-CNPJ A1 R$149,90 (destaque "Mais Vendido") · e-CPF A3 R$1
 4. **Asaas**: limpar clientes de teste com e-mail inválido `teste@certificadocwb.com.br` ("Teste Telefone Modal" pode excluir; "TESTE WEBHOOK NAO PAGAR" tem R$10 recebido, só trocar o e-mail). Confirmar que os SMS de "e-mail inválido" pararam.
 5. **Portal de parceiros (revenda para escritórios contábeis)**: só planejamento. Decisões até agora: fica SEPARADO do projeto atual; forma de cobrança do cliente final fica para depois ("fase de revenda"); primeiro escopo = cadastro do escritório + tabela de preço de custo (com histórico, porque os valores mudam). Falta o dono definir COMO separar tecnicamente (repositório/subdomínio/outra ideia).
 6. Pequenos: trocar `...` por `…` nos textos restantes (`HistoryTab`, `AdminLogin`); o botão "Copiar Link" do blog só mostra um alert e não copia; favicon novo pode ficar em cache no navegador.
+7. **Google Analytics 4**: feito e vinculado ao Google Ads (ver seção "Serviços externos"). Passos opcionais que o próprio Google sugeriu e ainda não foram feitos: criar conversões no GA4 a partir dos eventos-chave, e criar um público-alvo de remarketing. Também falta considerar o **Google Meu Negócio** (Perfil da Empresa no Google) — ainda não criado, foi identificado como próxima melhoria pendente numa conversa sobre um vídeo de dicas de SEO.
 
 ## Projetos relacionados
 
