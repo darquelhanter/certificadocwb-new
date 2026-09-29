@@ -48,7 +48,7 @@ Stack: React 19 + TypeScript + Vite 6 + Tailwind v4, funções serverless da Ver
 - `src/components/GuillocheWatermark.tsx` — marca d'água do hero.
 - `api/submit-lead.ts` — grava lead no banco + avisa por WhatsApp.
 - `api/create-payment.ts`, `api/asaas-webhook.ts` — cobrança e confirmação (evento `PAYMENT_CONFIRMED` **e** `PAYMENT_RECEIVED`; Pix só dispara o segundo).
-- `api/whatsapp-webhook.ts` — mensagens recebidas → bot de FAQ; se o admin responder manualmente, o bot pausa aquele número por 24h. Na primeira mensagem de um número novo (só a primeira, não repete nas seguintes), manda um e-mail de aviso pro admin também.
+- `api/whatsapp-webhook.ts` — mensagens recebidas → bot de FAQ; se o admin responder manualmente, o bot pausa aquele número por 24h. Na primeira mensagem de um número novo (só a primeira, não repete nas seguintes), manda um e-mail de aviso pra `cwbcertificado@gmail.com` **e** `darquelhanter1@gmail.com` (o dono pediu para acompanhar pessoalmente no começo; tirar o segundo e-mail depois se não precisar mais).
 - `api/track-pageview.ts`, `api/stats/pageviews.ts` — contador anônimo de visitas.
 - `api/leads/{list,update-status,delete}.ts` — CRUD protegido por senha (`x-admin-password`).
 - `api/_lib/` — `db.ts`, `adminAuth.ts`, `asaas.ts`, `evolutionApi.ts`, `email.ts`, `postPaymentNotify.ts`, `supportBot.ts`, `metaConversions.ts`.
