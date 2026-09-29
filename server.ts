@@ -8,6 +8,7 @@ import { insertLead, listLeads, updateLeadStatus, deleteLead, getConversationHis
 import { isAuthorized } from './api/_lib/adminAuth';
 import { notifyPaymentConfirmed } from './api/_lib/postPaymentNotify';
 import { askSupportBot } from './api/_lib/supportBot';
+import { sendEmail } from './api/_lib/email';
 
 const ADMIN_NOTIFICATION_NUMBER = '5541992447846';
 const ADMIN_NOTIFICATION_EMAIL = 'cwbcertificado@gmail.com';
@@ -219,12 +220,28 @@ app.post('/api/whatsapp-webhook', async (req, res) => {
       return res.status(200).json({ ignored: true, reason: 'paused' });
     }
 
+    // Checked before appending the current message — an empty history here
+    // means this is the very first message ever from this number.
+    const isNewContact = (await getConversationHistory(phone, 1)).length === 0;
+
     await appendConversationMessage(phone, 'user', text);
     const history = await getConversationHistory(phone);
     const { reply, needsHuman } = await askSupportBot(history);
     await appendConversationMessage(phone, 'assistant', reply);
 
     await sendWhatsAppText(phone, reply);
+
+    if (isNewContact) {
+      try {
+        await sendEmail(
+          ADMIN_NOTIFICATION_EMAIL,
+          `📱 Novo contato via WhatsApp — ${phone}`,
+          `<p>Um novo cliente iniciou contato pelo WhatsApp.</p><p><strong>Número:</strong> ${phone}<br><strong>Primeira mensagem:</strong> "${text}"</p><p>A IA já respondeu automaticamente pelo WhatsApp.</p>`
+        );
+      } catch (err) {
+        console.error('Falha ao enviar e-mail de novo contato via WhatsApp:', err);
+      }
+    }
 
     if (needsHuman) {
       await sendWhatsAppText(
