@@ -97,7 +97,7 @@ e-CPF A1 R$99,90 · e-CNPJ A1 R$149,90 (destaque "Mais Vendido") · e-CPF A3 R$1
 
 ## Projetos relacionados
 
-- **`google-ads-claude-analyzer`** (`Documents\Hantech\google-ads-claude-analyzer`, projeto Python separado, sem Git ainda): lê métricas da campanha do Google Ads acima e pede análise ao Claude. Tem seu próprio `CLAUDE.md` com todas as credenciais já configuradas (conta de gerente Hantech 782-777-9099, projeto Google Cloud `certificado-cwb-ads`, nível de acesso "Exploração" aprovado em 2026-09-28).
+- **`google-ads-claude-analyzer`** (`Documents\Hantech\google-ads-claude-analyzer`, projeto Python separado, sem Git ainda): lê métricas da campanha do Google Ads acima (por campanha e por palavra-chave) e pede análise ao Claude. Roda sozinho toda segunda 8h (tarefa do Agendador de Tarefas do Windows `AnaliseGoogleAdsCWB`, desde 2026-09-29) e manda o relatório por e-mail pra `cwbcertificado@gmail.com` e `darquelhanter1@gmail.com`. Tem seu próprio `CLAUDE.md` com todas as credenciais já configuradas (conta de gerente Hantech 782-777-9099, projeto Google Cloud `certificado-cwb-ads`, nível de acesso "Exploração" aprovado em 2026-09-28). **Pendência urgente lá**: publicar o app OAuth em produção, senão o refresh token expira em 7 dias e a automação para sozinha.
 
 ## Histórico de sessões
 
