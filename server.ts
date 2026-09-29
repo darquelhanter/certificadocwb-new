@@ -12,6 +12,7 @@ import { sendEmail } from './api/_lib/email';
 
 const ADMIN_NOTIFICATION_NUMBER = '5541992447846';
 const ADMIN_NOTIFICATION_EMAIL = 'cwbcertificado@gmail.com';
+const WHATSAPP_NEW_CONTACT_EMAILS = ['cwbcertificado@gmail.com', 'darquelhanter1@gmail.com'];
 const HUMAN_TAKEOVER_PAUSE_HOURS = 24;
 
 dotenv.config();
@@ -234,7 +235,7 @@ app.post('/api/whatsapp-webhook', async (req, res) => {
     if (isNewContact) {
       try {
         await sendEmail(
-          ADMIN_NOTIFICATION_EMAIL,
+          WHATSAPP_NEW_CONTACT_EMAILS,
           `📱 Novo contato via WhatsApp — ${phone}`,
           `<p>Um novo cliente iniciou contato pelo WhatsApp.</p><p><strong>Número:</strong> ${phone}<br><strong>Primeira mensagem:</strong> "${text}"</p><p>A IA já respondeu automaticamente pelo WhatsApp.</p>`
         );

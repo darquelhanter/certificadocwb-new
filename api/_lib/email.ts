@@ -5,7 +5,7 @@ import { Resend } from 'resend';
 
 const FROM_ADDRESS = 'Certificado CWB <pagamentos@certificadocwb.com.br>';
 
-export async function sendEmail(to: string, subject: string, html: string): Promise<void> {
+export async function sendEmail(to: string | string[], subject: string, html: string): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error('RESEND_API_KEY não configurada — não é possível enviar e-mail.');

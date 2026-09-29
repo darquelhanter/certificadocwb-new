@@ -12,7 +12,7 @@ import { sendWhatsAppText } from './_lib/evolutionApi.js';
 import { sendEmail } from './_lib/email.js';
 
 const ADMIN_NOTIFICATION_NUMBER = '5541992447846';
-const ADMIN_NOTIFICATION_EMAIL = 'cwbcertificado@gmail.com';
+const ADMIN_NOTIFICATION_EMAILS = ['cwbcertificado@gmail.com', 'darquelhanter1@gmail.com'];
 const HUMAN_TAKEOVER_PAUSE_HOURS = 24;
 
 function extractMessageText(message: any): string | null {
@@ -92,7 +92,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (isNewContact) {
       try {
         await sendEmail(
-          ADMIN_NOTIFICATION_EMAIL,
+          ADMIN_NOTIFICATION_EMAILS,
           `📱 Novo contato via WhatsApp — ${phone}`,
           `<p>Um novo cliente iniciou contato pelo WhatsApp.</p><p><strong>Número:</strong> ${phone}<br><strong>Primeira mensagem:</strong> "${text}"</p><p>A IA já respondeu automaticamente pelo WhatsApp.</p>`
         );
