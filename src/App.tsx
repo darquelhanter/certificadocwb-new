@@ -1210,7 +1210,7 @@ export default function App() {
               </div>
 
               <div className="flex items-center space-x-3 text-parchment/40 shrink-0">
-                <span>Políticas de Privacidade</span>
+                <a href="/privacidade.html" className="hover:text-parchment/70 transition-colors">Políticas de Privacidade</a>
                 <span>•</span>
                 <span>Termos de Uso</span>
                 <button
