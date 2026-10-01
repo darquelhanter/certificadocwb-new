@@ -46,6 +46,7 @@ Stack: React 19 + TypeScript + Vite 6 + Tailwind v4, funções serverless da Ver
 - `src/components/PaymentModal.tsx` — checkout (nome, CPF/CNPJ, e-mail e WhatsApp obrigatórios; mídia física opcional com 10% de desconto no combo) → `/api/create-payment` → redireciona para a fatura do Asaas.
 - `src/components/HistoryTab.tsx` + `AdminLogin.tsx` — painel de Leads. Acesso: ícone de cadeado quase invisível no canto inferior direito do rodapé; senha = `ADMIN_PASSWORD`. Mostra cartões de visualizações e visitantes únicos.
 - `src/components/GuillocheWatermark.tsx` — marca d'água do hero.
+- `public/privacidade.html` — página de Política de Privacidade (LGPD), HTML estático servido direto pela Vercel (fora do app React). Linkada no rodapé do site e usada como URL exigida pelo Google para publicar o app OAuth do projeto `google-ads-claude-analyzer`.
 - `api/submit-lead.ts` — grava lead no banco + avisa por WhatsApp.
 - `api/create-payment.ts`, `api/asaas-webhook.ts` — cobrança e confirmação (evento `PAYMENT_CONFIRMED` **e** `PAYMENT_RECEIVED`; Pix só dispara o segundo).
 - `api/whatsapp-webhook.ts` — mensagens recebidas → bot de FAQ; se o admin responder manualmente, o bot pausa aquele número por 24h. Na primeira mensagem de um número novo (só a primeira, não repete nas seguintes), manda um e-mail de aviso pra `cwbcertificado@gmail.com` **e** `darquelhanter1@gmail.com` (o dono pediu para acompanhar pessoalmente no começo; tirar o segundo e-mail depois se não precisar mais).
@@ -97,7 +98,7 @@ e-CPF A1 R$99,90 · e-CNPJ A1 R$149,90 (destaque "Mais Vendido") · e-CPF A3 R$1
 
 ## Projetos relacionados
 
-- **`google-ads-claude-analyzer`** (`Documents\Hantech\google-ads-claude-analyzer`, projeto Python separado, sem Git ainda): lê métricas da campanha do Google Ads acima (por campanha e por palavra-chave) e pede análise ao Claude. Roda sozinho toda segunda 8h (tarefa do Agendador de Tarefas do Windows `AnaliseGoogleAdsCWB`, desde 2026-09-29) e manda o relatório por e-mail pra `cwbcertificado@gmail.com` e `darquelhanter1@gmail.com`. Tem seu próprio `CLAUDE.md` com todas as credenciais já configuradas (conta de gerente Hantech 782-777-9099, projeto Google Cloud `certificado-cwb-ads`, nível de acesso "Exploração" aprovado em 2026-09-28). **Pendência urgente lá**: publicar o app OAuth em produção, senão o refresh token expira em 7 dias e a automação para sozinha.
+- **`google-ads-claude-analyzer`** (`Documents\Hantech\google-ads-claude-analyzer`, projeto Python separado, sem Git ainda): lê métricas da campanha do Google Ads acima (por campanha e por palavra-chave) e pede análise ao Claude. Roda sozinho toda segunda 8h (tarefa do Agendador de Tarefas do Windows `AnaliseGoogleAdsCWB`, desde 2026-09-29) e manda o relatório por e-mail pra `cwbcertificado@gmail.com` e `darquelhanter1@gmail.com`. Tem seu próprio `CLAUDE.md` com todas as credenciais já configuradas (conta de gerente Hantech 782-777-9099, projeto Google Cloud `certificado-cwb-ads`, nível de acesso "Exploração" aprovado em 2026-09-28). App OAuth publicado em produção em 2026-10-01 (sem risco de expirar em 7 dias).
 
 ## Histórico de sessões
 
