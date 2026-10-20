@@ -6,7 +6,7 @@ import { submitLeadToEvolutionApi, sendWhatsAppText } from './api/_lib/evolution
 import { createAsaasCharge } from './api/_lib/asaas';
 import { insertLead, listLeads, updateLeadStatus, deleteLead, getConversationHistory, appendConversationMessage, getLastAssistantMessage, pausePhone, isPhonePaused, insertPageView, getPageViewStats } from './api/_lib/db';
 import { isAuthorized } from './api/_lib/adminAuth';
-import { notifyPaymentConfirmed } from './api/_lib/postPaymentNotify';
+import { notifyPaymentConfirmed, notifyPaymentRequested } from './api/_lib/postPaymentNotify';
 import { askSupportBot } from './api/_lib/supportBot';
 import { sendEmail } from './api/_lib/email';
 
@@ -134,14 +134,17 @@ const createPaymentLimiter = rateLimit({
 
 app.post('/api/create-payment', createPaymentLimiter, async (req, res) => {
   const { name, cpfCnpj, email, phone, value, description } = req.body || {};
-  const result = await createAsaasCharge({
-    name,
-    cpfCnpj,
-    email,
-    phone,
-    value: Number(value),
-    description,
-  });
+  const input = { name, cpfCnpj, email, phone, value: Number(value), description };
+  const result = await createAsaasCharge(input);
+
+  if (result.status === 200 && 'invoiceUrl' in result.body) {
+    try {
+      await notifyPaymentRequested(input, result.body.invoiceUrl, ADMIN_NOTIFICATION_NUMBER, ADMIN_NOTIFICATION_EMAIL);
+    } catch (err) {
+      console.error('Falha ao notificar pedido iniciado:', err);
+    }
+  }
+
   res.status(result.status).json(result.body);
 });
 

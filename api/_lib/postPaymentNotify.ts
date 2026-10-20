@@ -1,7 +1,7 @@
 // Shared logic for the "payment confirmed" moment: notifies both the
 // customer (ask for documents) and the admin (heads-up with the order
 // details) over WhatsApp and email. Used by the Asaas webhook handler.
-import { getConfig, asaasFetch } from './asaas.js';
+import { getConfig, asaasFetch, type AsaasChargeInput } from './asaas.js';
 import { sendWhatsAppText } from './evolutionApi.js';
 import { sendEmail } from './email.js';
 import { sendMetaPurchaseEvent } from './metaConversions.js';
@@ -98,5 +98,33 @@ export async function notifyPaymentConfirmed(customerId: string, description: st
   ]);
 
   const labels = ['whatsapp cliente', 'whatsapp admin', 'email cliente', 'email admin', 'meta purchase event'];
+  results.forEach((result, i) => logSettled(labels[i], result));
+}
+
+// Fires the moment a customer starts a checkout (fills the payment form and
+// gets an Asaas invoice link), before they've actually paid. Lets the admin
+// reach out proactively instead of only finding out at PAYMENT_CONFIRMED —
+// orders were being lost to customers who opened checkout, got stuck or
+// hesitated, and never heard from anyone because nothing notified until
+// payment cleared.
+function orderRequestedWhatsAppText(input: AsaasChargeInput, invoiceUrl: string) {
+  const phoneDigits = input.phone ? input.phone.replace(/\D/g, '') : '';
+  const waLink = phoneDigits ? `https://wa.me/55${phoneDigits}` : 'não informado';
+  return `🛒 Novo pedido iniciado (aguardando pagamento)\n\nCliente: ${input.name}\nDocumento: ${input.cpfCnpj}\nTelefone: ${input.phone || 'não informado'}\nE-mail: ${input.email || 'não informado'}\nPedido: ${input.description}\nValor: R$ ${formatBRL(input.value)}\n\nFale com o cliente agora, antes que ele desista de pagar:\n${waLink}`;
+}
+
+function orderRequestedEmailHtml(input: AsaasChargeInput, invoiceUrl: string) {
+  const phoneDigits = input.phone ? input.phone.replace(/\D/g, '') : '';
+  const waLink = phoneDigits ? `https://wa.me/55${phoneDigits}` : '';
+  return `<p>🛒 <strong>Novo pedido iniciado (aguardando pagamento)</strong></p><p>Cliente: ${input.name}<br>Documento: ${input.cpfCnpj}<br>Telefone: ${input.phone || 'não informado'}<br>E-mail: ${input.email || 'não informado'}<br>Pedido: ${input.description}<br>Valor: R$ ${formatBRL(input.value)}</p><p>Fale com o cliente agora, antes que ele desista de pagar${waLink ? `: <a href="${waLink}">${waLink}</a>` : ''}.</p><p><a href="${invoiceUrl}">Ver cobrança no Asaas</a></p>`;
+}
+
+export async function notifyPaymentRequested(input: AsaasChargeInput, invoiceUrl: string, adminNumber: string, adminEmail: string): Promise<void> {
+  const results = await Promise.allSettled([
+    sendWhatsAppText(normalizePhone(adminNumber), orderRequestedWhatsAppText(input, invoiceUrl)),
+    sendEmail(adminEmail, `🛒 Novo pedido iniciado — ${input.name} (aguardando pagamento)`, orderRequestedEmailHtml(input, invoiceUrl)),
+  ]);
+
+  const labels = ['whatsapp admin (pedido iniciado)', 'email admin (pedido iniciado)'];
   results.forEach((result, i) => logSettled(labels[i], result));
 }
